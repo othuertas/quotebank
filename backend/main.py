@@ -6,7 +6,7 @@ Mounts all routers, serves static files (uploads + frontend), and creates DB tab
 
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
@@ -44,6 +44,8 @@ app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="frontend")
 # ── SPA catch-all ───────────────────────────────────────────────────────────────
 
 @app.get("/{full_path:path}")
-def serve_frontend(full_path: str):
+def serve_frontend(full_path: str, response: Response):
     """Serve index.html for all non-API, non-static routes (SPA catch-all)."""
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    response.headers["Vary"] = "Accept-Language"
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
