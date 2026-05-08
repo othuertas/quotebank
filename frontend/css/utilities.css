@@ -1,0 +1,151 @@
+/* ── Empty State ─────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-muted);
+}
+
+.empty-state .emoji {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 0.9rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header-inner {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .logo { font-size: 1.05rem; }
+
+  .nav a {
+    padding: 6px 14px;
+    font-size: 0.825rem;
+  }
+
+  .main { padding: 20px 16px 60px; }
+
+  .card { padding: 20px; }
+
+  .meme-image-wrap { margin: -20px -20px 14px -20px; }
+
+  .feed-controls { flex-direction: column; align-items: stretch; }
+
+  .sort-buttons { justify-content: center; }
+
+  .btn-post { text-align: center; }
+
+  .auth-card { padding: 28px 20px; }
+
+  .modal { padding: 24px; }
+
+  .card-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  .vote-controls { align-self: flex-end; }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* Spinner for loading states */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 40px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+
+.toast.error {
+  border-color: var(--negative);
+  color: var(--negative);
+}
+
+.toast.success {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+/* ── Go To Top ─────────────────────────────────────────────────────────── */
+.go-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.go-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.go-to-top:hover {
+  transform: translateY(-4px);
+  background: var(--bg-card-hover);
+}

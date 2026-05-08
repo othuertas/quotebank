@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuoteBank & MemeBank</title>
+  <meta name="description" content="Share and vote on the best quotes and memes. A community-driven collection of wisdom and humor.">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="#memes" id="switch-feed-btn" class="switch-feed">
+          <span class="switch-text">switch to MemeBank!</span>
+          <span class="switch-icon">⇄</span>
+        </a>
+      </div>
+      
+      <a href="#quotes" class="logo" id="main-logo">Quote<span>Bank</span></a>
+      
+      <div class="header-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <div id="auth-area"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main Content ────────────────────────────────────────────────────── -->
+  <main class="main" id="app"></main>
+
+  <!-- ── Modal ───────────────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal-content"></div>
+  </div>
+
+  <!-- ── Toast Container ─────────────────────────────────────────────────── -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ── Go To Top ───────────────────────────────────────────────────────── -->
+  <button id="go-to-top" class="go-to-top" aria-label="Go to top">↑</button>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

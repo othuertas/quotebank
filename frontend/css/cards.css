@@ -1,0 +1,194 @@
+/* ── Cards ─────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all var(--transition-normal);
+  animation: fadeInUp 0.4s ease forwards;
+  opacity: 0;
+}
+
+.card:hover {
+  border-color: rgba(79, 152, 163, 0.2);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:nth-child(1) { animation-delay: 0.02s; }
+.card:nth-child(2) { animation-delay: 0.06s; }
+.card:nth-child(3) { animation-delay: 0.10s; }
+.card:nth-child(4) { animation-delay: 0.14s; }
+.card:nth-child(5) { animation-delay: 0.18s; }
+
+/* Quote-specific */
+.quote-card {
+  cursor: pointer;
+}
+
+.quote-text {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin: 16px 0;
+  text-align: center;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.expanded-content {
+  display: none;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.quote-card.expanded .expanded-content {
+  display: block;
+}
+
+.quote-card.expanded .quote-text {
+  text-align: left;
+  font-size: 1.15rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quote-author {
+  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.quote-said-at {
+  color: var(--text-muted);
+  font-size: 0.825rem;
+  font-style: italic;
+}
+
+/* Meme-specific */
+.meme-image-wrap {
+  margin: -24px -24px 16px -24px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.meme-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  display: block;
+}
+
+.meme-caption {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.meme-credited {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Minimal Card footer */
+.card-footer-minimal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  gap: 12px;
+}
+
+.meta-minimal {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.controls-minimal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Voting ─────────────────────────────────────────────────────────── */
+.vote-controls-minimal {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+}
+
+.vote-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+}
+
+.vote-btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.vote-btn.upvote:hover,
+.vote-btn.upvote.active {
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.vote-btn.downvote:hover,
+.vote-btn.downvote.active {
+  color: var(--negative);
+  background: var(--negative-glow);
+}
+
+.vote-score {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition-fast);
+}
+
+.vote-score.positive { color: var(--score-positive); }
+.vote-score.negative { color: var(--score-negative); }
+.vote-score.zero     { color: var(--score-zero); }
+
+.card-delete-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  transition: all var(--transition-fast);
+  margin-left: 8px;
+}
+
+.card-delete-btn:hover {
+  color: var(--negative);
+  border-color: var(--negative);
+  background: var(--negative-glow);
+}

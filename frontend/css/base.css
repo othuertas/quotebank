@@ -1,0 +1,124 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   QuoteBank & MemeBank — Style Sheet
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@700,800&display=swap");
+
+/* ── Custom Properties ─────────────────────────────────────────────────────────── */
+:root {
+  /* Light mode (default) */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-card: #e5e5e5;
+  --bg-card-hover: #d5d5d5;
+  --bg-input: #f0f0f0;
+  --border: #cccccc;
+  --border-focus: #1c1b19;
+
+  --text-primary: #1c1b19;
+  --text-secondary: #5a5652;
+  --text-muted: #8a8580;
+
+  --accent: #1c1b19;
+  --accent-hover: #333333;
+  --accent-glow: rgba(0, 0, 0, 0.05);
+  --accent-subtle: rgba(0, 0, 0, 0.04);
+
+  --negative: #dd6974;
+  --negative-hover: #e4808a;
+  --negative-glow: rgba(221, 105, 116, 0.15);
+
+  --score-positive: #1c1b19;
+  --score-negative: #dd6974;
+  --score-zero: #5a5652;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 8px; /* Sharper corners for cards */
+  --radius-xl: 24px;
+
+  --font-body: "Satoshi", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: "Cabinet Grotesk", "Satoshi", sans-serif;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f0e0d;
+  --bg-secondary: #161513;
+  --bg-card: #1c1b19;
+  --bg-card-hover: #232220;
+  --bg-input: #1c1b19;
+  --border: #2a2826;
+  --border-focus: #ccc9c4;
+
+  --text-primary: #ccc9c4;
+  --text-secondary: #8a8580;
+  --text-muted: #5a5652;
+
+  --accent: #ccc9c4;
+  --accent-hover: #ffffff;
+  --accent-glow: rgba(204, 201, 196, 0.15);
+  --accent-subtle: rgba(204, 201, 196, 0.08);
+
+  --score-positive: #ccc9c4;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+/* Dark mode: accent buttons need dark text */
+[data-theme="dark"] .btn-post,
+[data-theme="dark"] .btn-accent {
+  color: #0f0e0d;
+}
+
+[data-theme="dark"] .form-submit {
+  color: #0f0e0d;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+input, textarea {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+}
