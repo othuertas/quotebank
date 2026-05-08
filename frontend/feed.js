@@ -2,28 +2,29 @@ import { state, dom } from "./state.js";
 import { api, toast } from "./api.js";
 import { quoteCard, memeCard, attachVoteListeners, attachDeleteListeners, attachExpandListeners } from "./cards.js";
 import { openQuoteModal, openMemeModal } from "./modals.js";
+import { t } from "./i18n.js";
 
 export function renderFeed(type) {
   const isQuotes = type === "quotes";
-  const postLabel = isQuotes ? "+ Add Quote" : "+ Add Meme";
+  const postLabel = isQuotes ? t("add_quote") : t("add_meme");
 
   dom.app.innerHTML = `
     <div class="feed-controls-container">
       <div class="feed-controls-top">
         <div class="sort-buttons" id="sort-buttons">
-          <button class="sort-btn active" data-sort="new"><span class="sort-icon">🆕</span><span class="sort-label">New</span></button>
-          <button class="sort-btn" data-sort="top"><span class="sort-icon">🔥</span><span class="sort-label">Top</span></button>
-          <button class="sort-btn" data-sort="old"><span class="sort-icon">📅</span><span class="sort-label">Old</span></button>
-          <button class="sort-btn" data-sort="random"><span class="sort-icon">🎲</span><span class="sort-label">Random</span></button>
+          <button class="sort-btn active" data-sort="new"><span class="sort-icon">🆕</span><span class="sort-label">${t("sort_new")}</span></button>
+          <button class="sort-btn" data-sort="top"><span class="sort-icon">🔥</span><span class="sort-label">${t("sort_top")}</span></button>
+          <button class="sort-btn" data-sort="old"><span class="sort-icon">📅</span><span class="sort-label">${t("sort_old")}</span></button>
+          <button class="sort-btn" data-sort="random"><span class="sort-icon">🎲</span><span class="sort-label">${t("sort_random")}</span></button>
         </div>
-        ${isQuotes ? '<input type="text" id="search-input" class="search-input" placeholder="Search Quotebank">' : ''}
+        ${isQuotes ? `<input type="text" id="search-input" class="search-input" placeholder="${t("search_placeholder")}">` : ''}
       </div>
       ${state.auth.token ? `<button class="btn-post full-width" id="btn-open-post">${postLabel}</button>` : ""}
     </div>
     <div id="feed-list"></div>
     <div id="feed-loading"></div>
     <div class="load-more-wrap hidden" id="load-more-wrap">
-      <button class="btn-load-more" id="btn-load-more">Load more</button>
+      <button class="btn-load-more" id="btn-load-more">${t("load_more")}</button>
     </div>
   `;
 
@@ -90,8 +91,8 @@ export async function loadFeedPage(type, append = false) {
       list.innerHTML = `
         <div class="empty-state">
           <div class="emoji">${type === "quotes" ? "💬" : "🖼️"}</div>
-          <h3>No ${type} yet</h3>
-          <p>Be the first to post one!</p>
+          <h3>${type === "quotes" ? t("no_quotes") : t("no_memes")}</h3>
+          <p>${t("be_first")}</p>
         </div>
       `;
       document.getElementById("load-more-wrap").classList.add("hidden");

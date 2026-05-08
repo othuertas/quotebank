@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { api, toast } from "./api.js";
 import { escHtml, timeAgo, scoreClass } from "./utils.js";
+import { t } from "./i18n.js";
 
 export function quoteCard(q, index) {
   const delay = index * 0.04;
@@ -48,7 +49,7 @@ export function memeCard(m, index) {
         <img class="meme-image" src="/uploads/${escHtml(m.image_filename)}" alt="${escHtml(m.caption || 'Meme')}" loading="lazy">
       </div>
       ${m.caption ? `<p class="meme-caption">${escHtml(m.caption)}</p>` : ""}
-      ${m.credited_author ? `<p class="meme-credited">by ${escHtml(m.credited_author)}</p>` : ""}
+      ${m.credited_author ? `<p class="meme-credited">${t("by")} ${escHtml(m.credited_author)}</p>` : ""}
       <div class="card-footer-minimal">
         <div class="meta-minimal">
           @${escHtml(m.posted_by_username)} · ${timeAgo(m.publish_date)}
@@ -129,7 +130,7 @@ export function attachDeleteListeners(container, type) {
       if (!btn.dataset.confirmed) {
         btn.dataset.confirming = "1";
         const orig = btn.innerHTML;
-        btn.innerHTML = "Sure?";
+        btn.innerHTML = t("sure");
         btn.style.color = "var(--negative)";
         btn.style.borderColor = "var(--negative)";
         const timer = setTimeout(() => { btn.innerHTML = orig; btn.style.color = ""; btn.style.borderColor = ""; delete btn.dataset.confirming; }, 2500);
@@ -142,7 +143,7 @@ export function attachDeleteListeners(container, type) {
           try {
             await api("DELETE", `/${endpointType}/${id}`);
             btn.closest(".card").remove();
-            toast("Deleted!");
+            toast(t("deleted"));
           } catch (err) {
             toast(err.message, "error");
             btn.innerHTML = orig;

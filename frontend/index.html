@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuoteBank & MemeBank</title>
   <meta name="description" content="Share and vote on the best quotes and memes. A community-driven collection of wisdom and humor.">
+  <link rel="icon" type="image/png" href="/static/favicon.png">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -13,8 +14,16 @@
   <header class="header" id="header">
     <div class="header-inner">
       <div class="header-left">
+        <div class="lang-switcher-wrap">
+          <span class="lang-icon">🌐</span>
+          <select id="lang-switcher" class="lang-switcher" aria-label="Select language">
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+            <option value="ca">CA</option>
+          </select>
+        </div>
         <a href="#memes" id="switch-feed-btn" class="switch-feed">
-          <span class="switch-text">switch to MemeBank!</span>
+          <span class="switch-text" data-i18n="switch_to_meme">switch to MemeBank!</span>
           <span class="switch-icon">⇄</span>
         </a>
       </div>

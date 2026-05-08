@@ -1,10 +1,11 @@
 export const state = {
   auth: { token: null, username: null, is_admin: false },
-  currentSort: "new",
   currentPage: 1,
+  currentSort: "new",
+  currentSearch: "",
   isLoading: false,
   searchTimeout: null,
-  currentSearch: ""
+  lang: "en",
 };
 
 export const dom = {

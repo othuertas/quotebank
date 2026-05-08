@@ -1,6 +1,7 @@
 import { state, dom } from "./state.js";
 import { api, toast } from "./api.js";
 import { renderFeed } from "./feed.js";
+import { t } from "./i18n.js";
 
 export function openModal(html) {
   dom.modalContent.innerHTML = html;
@@ -25,24 +26,24 @@ export function setupModalListeners() {
 export function openQuoteModal() {
   openModal(`
     <div class="modal-header">
-      <h2>Post a Quote</h2>
+      <h2>${t("post_quote")}</h2>
       <button class="modal-close" id="modal-close-btn">✕</button>
     </div>
     <form id="quote-form">
       <div class="form-group">
-        <label for="quote-text">Quote</label>
-        <textarea id="quote-text" placeholder="Enter the quote..." required></textarea>
+        <label for="quote-text">${t("quote_label")}</label>
+        <textarea id="quote-text" placeholder="${t("quote_placeholder")}" required></textarea>
       </div>
       <div class="form-group">
-        <label for="quote-author">Who said it?</label>
-        <input type="text" id="quote-author" placeholder="e.g. Albert Einstein" required>
+        <label for="quote-author">${t("who_said_it")}</label>
+        <input type="text" id="quote-author" placeholder="${t("author_placeholder")}" required>
       </div>
       <div class="form-group">
-        <label for="quote-said-at">When was it said?</label>
-        <input type="text" id="quote-said-at" placeholder="e.g. June 2023, last Tuesday">
+        <label for="quote-said-at">${t("when_said")}</label>
+        <input type="text" id="quote-said-at" placeholder="${t("date_placeholder")}">
       </div>
       <p class="form-error" id="quote-error"></p>
-      <button type="submit" class="form-submit">Post Quote</button>
+      <button type="submit" class="form-submit">${t("btn_post_quote")}</button>
     </form>
   `);
 
@@ -60,7 +61,7 @@ export function openQuoteModal() {
         said_at: document.getElementById("quote-said-at").value.trim() || null,
       });
       closeModal();
-      toast("Quote posted!");
+      toast(t("quote_posted"));
       state.currentPage = 1;
       state.currentSort = "new";
       renderFeed("quotes");
@@ -74,27 +75,27 @@ export function openQuoteModal() {
 export function openMemeModal() {
   openModal(`
     <div class="modal-header">
-      <h2>Post a Meme</h2>
+      <h2>${t("post_meme")}</h2>
       <button class="modal-close" id="modal-close-btn">✕</button>
     </div>
     <form id="meme-form">
       <div class="form-group">
-        <label>Image</label>
+        <label>${t("image_label")}</label>
         <div class="file-input-wrap">
           <input type="file" id="meme-file" accept="image/*" required>
-          <div class="file-input-label" id="file-label">📁 Choose an image or drag & drop</div>
+          <div class="file-input-label" id="file-label">${t("choose_image")}</div>
         </div>
       </div>
       <div class="form-group">
-        <label for="meme-caption">Caption</label>
-        <input type="text" id="meme-caption" placeholder="Add a caption (optional)">
+        <label for="meme-caption">${t("caption_label")}</label>
+        <input type="text" id="meme-caption" placeholder="${t("caption_placeholder")}">
       </div>
       <div class="form-group">
-        <label for="meme-credited">Credited to</label>
-        <input type="text" id="meme-credited" placeholder="Original author (optional)">
+        <label for="meme-credited">${t("credited_to")}</label>
+        <input type="text" id="meme-credited" placeholder="${t("credited_placeholder")}">
       </div>
       <p class="form-error" id="meme-error"></p>
-      <button type="submit" class="form-submit">Post Meme</button>
+      <button type="submit" class="form-submit">${t("btn_post_meme")}</button>
     </form>
   `);
 
@@ -108,7 +109,7 @@ export function openMemeModal() {
       fileLabel.textContent = `📎 ${fileInput.files[0].name}`;
       fileLabel.classList.add("has-file");
     } else {
-      fileLabel.textContent = "📁 Choose an image or drag & drop";
+      fileLabel.textContent = t("choose_image");
       fileLabel.classList.remove("has-file");
     }
   });
@@ -120,7 +121,7 @@ export function openMemeModal() {
 
     const file = fileInput.files[0];
     if (!file) {
-      errorEl.textContent = "Please select an image";
+      errorEl.textContent = t("please_select_image");
       errorEl.classList.add("visible");
       return;
     }
@@ -133,7 +134,7 @@ export function openMemeModal() {
     try {
       await api("POST", "/memes", formData, true);
       closeModal();
-      toast("Meme posted!");
+      toast(t("meme_posted"));
       state.currentPage = 1;
       state.currentSort = "new";
       renderFeed("memes");

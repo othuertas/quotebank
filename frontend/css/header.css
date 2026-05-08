@@ -24,6 +24,54 @@
   justify-self: start;
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.lang-switcher-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lang-icon {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.lang-switcher {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  padding: 4px 14px 4px 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: color var(--transition-fast);
+}
+
+.lang-switcher:hover {
+  color: var(--text-primary);
+}
+
+.lang-switcher-wrap::after {
+  content: "▼";
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.lang-switcher option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .header-right {

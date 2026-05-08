@@ -2,6 +2,7 @@ import { state } from "./state.js";
 import { renderFeed } from "./feed.js";
 import { renderAuth } from "./auth.js";
 import { renderProfile, renderAdmin } from "./pages.js";
+import { t } from "./i18n.js";
 
 export function getRoute() {
   const hash = location.hash.replace("#", "") || "quotes";
@@ -16,12 +17,14 @@ export function setActiveNav() {
   const switchText = switchBtn.querySelector(".switch-text");
   if (r === "memes") {
     switchBtn.href = "#quotes";
-    switchText.textContent = "switch to QuoteBank!";
+    switchText.setAttribute("data-i18n", "switch_to_quote");
+    switchText.textContent = t("switch_to_quote");
     if (logo) logo.innerHTML = "Meme<span>Bank</span>";
     document.title = "MemeBank";
   } else {
     switchBtn.href = "#memes";
-    switchText.textContent = "switch to MemeBank!";
+    switchText.setAttribute("data-i18n", "switch_to_meme");
+    switchText.textContent = t("switch_to_meme");
     if (logo) logo.innerHTML = "Quote<span>Bank</span>";
     document.title = "QuoteBank";
   }
