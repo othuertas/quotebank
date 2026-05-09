@@ -13,7 +13,7 @@ export function loadAuth() {
         state.auth = {
           token: parsed.token,
           username: parsed.username,
-          userId: parsed.userId,
+          userId: parsed.userId || null, // ensure userId is properly mapped
           is_admin: !!parsed.is_admin
         };
       }
@@ -63,10 +63,17 @@ export function renderAuthArea() {
 
     // Shared logout logic
     const doLogout = () => {
-      state.auth = { token: null, username: null, is_admin: false };
+      // Reset state.auth completely
+      state.auth = { token: null, username: null, userId: null, is_admin: false };
       saveAuth();
       renderAuthArea();
-      route();
+      // Immediately re-fetch the feed so cards reload with user_vote: null
+      setTimeout(async () => {
+        const { loadFeedPage } = await import("./feed.js");
+        state.currentPage = 1;
+        document.getElementById("feed-list").innerHTML = "";
+        loadFeedPage(location.hash.replace("#", "") || "quotes");
+      }, 0);
       toast(t("logged_out"));
     };
 
@@ -75,8 +82,8 @@ export function renderAuthArea() {
 
     // Mobile menu toggle
     const avatarBtn = document.getElementById("user-avatar-btn");
-    const dropdown  = document.getElementById("user-dropdown");
-    const menuWrap  = document.getElementById("user-menu-mobile");
+    const dropdown = document.getElementById("user-dropdown");
+    const menuWrap = document.getElementById("user-menu-mobile");
 
     avatarBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -179,9 +186,9 @@ export function renderAuth(mode) {
         </form>
         <p class="auth-switch">
           ${isLogin
-            ? `${t("no_account")} <a href='#register'>${t("sign_up")}</a>`
-            : `${t("has_account")} <a href='#login'>${t("log_in")}</a>`
-          }
+      ? `${t("no_account")} <a href='#register'>${t("sign_up")}</a>`
+      : `${t("has_account")} <a href='#login'>${t("log_in")}</a>`
+    }
         </p>
       </div>
     </div>
@@ -208,7 +215,12 @@ export function renderAuth(mode) {
       renderAuthArea();
       toast(isLogin ? t("welcome_back_toast") : t("account_created"));
       location.hash = "#quotes";
-      if (location.hash === "#quotes") route(); // Force route if hash doesn't change
+      setTimeout(async () => {
+        const { loadFeedPage } = await import("./feed.js");
+        state.currentPage = 1;
+        document.getElementById("feed-list").innerHTML = "";
+        loadFeedPage("quotes");
+      }, 0);
     } catch (err) {
       errorEl.textContent = err.message;
       errorEl.classList.add("visible");

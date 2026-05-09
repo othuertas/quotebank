@@ -19,7 +19,7 @@ export function quoteCard(q, index) {
   const editedMark = q.edited_at ? ` (${t("edited")} ${timeAgo(q.edited_at)})` : "";
 
   return `
-    <article class="card quote-card" style="animation-delay:${delay}s" data-content-type="quote" data-content-id="${q.id}">
+    <article class="card quote-card" style="animation-delay:${delay}s" data-content-type="quote" data-content-id="${q.id}" data-user-vote="${q.user_vote ?? 'null'}">
       <p class="quote-text">“${escHtml(q.text)}”</p>
       <div class="expanded-content">
         <div>
@@ -61,7 +61,7 @@ export function memeCard(m, index) {
   const editedMark = m.edited_at ? ` (${t("edited")} ${timeAgo(m.edited_at)})` : "";
 
   return `
-    <article class="card" style="animation-delay:${delay}s" data-content-type="meme" data-content-id="${m.id}">
+    <article class="card" style="animation-delay:${delay}s" data-content-type="meme" data-content-id="${m.id}" data-user-vote="${m.user_vote ?? 'null'}">
       <div class="meme-image-wrap">
         <img class="meme-image" src="/uploads/${escHtml(m.image_filename)}" alt="${escHtml(m.caption || 'Meme')}" loading="lazy">
       </div>
@@ -117,34 +117,17 @@ export function attachVoteListeners(container, type) {
     btn.setAttribute("data-bound", "1");
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
+      if (!state.auth.token) {
+        toast(t("login_required_vote") || "Log in to vote", "error");
+        return;
+      }
+      
       const card = btn.closest(".card");
       const contentType = card.dataset.contentType;
       const contentId = parseInt(card.dataset.contentId, 10);
       const value = parseInt(btn.dataset.value, 10);
 
-      const scoreEl = card.querySelector(".vote-score");
-      const upBtn = card.querySelector(".vote-btn.upvote");
-      const downBtn = card.querySelector(".vote-btn.downvote");
-      const oldScore = parseInt(scoreEl.textContent, 10);
-
-      const wasActive = btn.classList.contains("active");
-      let newScore = oldScore;
-
-      if (wasActive) {
-        btn.classList.remove("active");
-        newScore -= value;
-      } else {
-        const opposite = value === 1 ? downBtn : upBtn;
-        if (opposite.classList.contains("active")) {
-          opposite.classList.remove("active");
-          newScore -= (value === 1 ? -1 : 1);
-        }
-        btn.classList.add("active");
-        newScore += value;
-      }
-
-      scoreEl.textContent = newScore;
-      scoreEl.className = `vote-score ${scoreClass(newScore)}`;
+      const currentVote = parseInt(card.dataset.userVote) || null;
 
       try {
         const result = await api("POST", "/vote", {
@@ -153,15 +136,26 @@ export function attachVoteListeners(container, type) {
           value: value,
         });
 
+        // Update the card's dataset
+        card.dataset.userVote = result.user_vote ?? "null";
+
+        // Re-render the card's voting DOM elements from the API response
+        const scoreEl = card.querySelector(".vote-score");
+        const upBtn = card.querySelector(".vote-btn.upvote");
+        const downBtn = card.querySelector(".vote-btn.downvote");
+        
         scoreEl.textContent = result.new_score;
         scoreEl.className = `vote-score ${scoreClass(result.new_score)}`;
-        upBtn.classList.toggle("active", result.user_vote === 1);
-        downBtn.classList.toggle("active", result.user_vote === -1);
+        
+        upBtn.classList.remove("active");
+        downBtn.classList.remove("active");
+
+        if (result.user_vote === 1) {
+          upBtn.classList.add("active");
+        } else if (result.user_vote === -1) {
+          downBtn.classList.add("active");
+        }
       } catch (err) {
-        scoreEl.textContent = oldScore;
-        scoreEl.className = `vote-score ${scoreClass(oldScore)}`;
-        if (wasActive) btn.classList.add("active");
-        else btn.classList.remove("active");
         toast(err.message, "error");
       }
     });

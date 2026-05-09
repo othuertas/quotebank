@@ -72,9 +72,9 @@ class Vote(Base):
     content_id = Column(Integer, nullable=False)
     vote_value = Column(Integer, nullable=False)         # +1 or -1
     voter_ip = Column(String(64), nullable=False)
-    voter_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    voter_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     __table_args__ = (
-        UniqueConstraint("content_type", "content_id", "voter_ip", name="uq_vote_per_ip"),
+        UniqueConstraint("content_type", "content_id", "voter_user_id", name="uq_vote_per_user"),
     )

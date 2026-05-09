@@ -6,14 +6,14 @@ import os
 import uuid
 
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, Request, Query, UploadFile, File, Form, status
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from backend.database import get_db
 from backend.models import Meme, Vote, User
 from backend.schemas import MemeOut, MemeUpdate
-from backend.auth import get_current_user
+from backend.auth import get_current_user, get_optional_user
 
 router = APIRouter(prefix="/api/memes", tags=["memes"])
 
@@ -24,12 +24,22 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"}
 
 
-def _build_meme_out(meme: Meme, db: Session, voter_ip: str) -> dict:
-    existing_vote = (
-        db.query(Vote)
-        .filter(Vote.content_type == "meme", Vote.content_id == meme.id, Vote.voter_ip == voter_ip)
-        .first()
-    )
+def _build_meme_out(meme: Meme, db: Session, user_id: int | None) -> dict:
+    user_vote = None
+    if user_id is not None:
+        # Fetched with a query filtered strictly by the current user's ID
+        existing_vote = (
+            db.query(Vote)
+            .filter(
+                Vote.content_type == "meme",
+                Vote.content_id == meme.id,
+                Vote.voter_user_id == user_id
+            )
+            .first()
+        )
+        if existing_vote:
+            user_vote = existing_vote.vote_value
+
     return {
         "id": meme.id,
         "image_filename": meme.image_filename,
@@ -41,18 +51,18 @@ def _build_meme_out(meme: Meme, db: Session, voter_ip: str) -> dict:
         "edited_at": meme.edited_at,
         "is_anonymous": meme.is_anonymous,
         "score": meme.score,
-        "user_vote": existing_vote.vote_value if existing_vote else None,
+        "user_vote": user_vote,
     }
 
 
 @router.get("", response_model=list[MemeOut])
 def list_memes(
-    request: Request,
+    current_user: User | None = Depends(get_optional_user),
     sort: str = Query("random", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     db: Session = Depends(get_db),
 ):
-    voter_ip = request.client.host if request.client else "unknown"
+    user_id = current_user.id if current_user else None
 
     query = db.query(Meme)
     if sort == "top":
@@ -65,12 +75,11 @@ def list_memes(
         query = query.order_by(func.random())
 
     memes = query.offset((page - 1) * PAGE_SIZE).limit(PAGE_SIZE).all()
-    return [_build_meme_out(m, db, voter_ip) for m in memes]
+    return [_build_meme_out(m, db, user_id) for m in memes]
 
 
 @router.post("", response_model=MemeOut, status_code=status.HTTP_201_CREATED)
 async def create_meme(
-    request: Request,
     image: UploadFile = File(...),
     caption: str = Form(default=""),
     credited_author: str = Form(default=""),
@@ -104,15 +113,13 @@ async def create_meme(
     db.commit()
     db.refresh(meme)
 
-    voter_ip = request.client.host if request.client else "unknown"
-    return _build_meme_out(meme, db, voter_ip)
+    return _build_meme_out(meme, db, current_user.id)
 
 
 @router.patch("/{meme_id}", response_model=MemeOut)
 def update_meme(
     meme_id: int,
     body: MemeUpdate,
-    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -129,8 +136,7 @@ def update_meme(
     db.commit()
     db.refresh(meme)
 
-    voter_ip = request.client.host if request.client else "unknown"
-    return _build_meme_out(meme, db, voter_ip)
+    return _build_meme_out(meme, db, current_user.id)
 
 
 @router.delete("/{meme_id}", status_code=status.HTTP_200_OK)

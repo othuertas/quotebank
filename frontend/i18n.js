@@ -24,6 +24,7 @@ const translations = {
     sure: "Sure?",
     deleted: "Deleted!",
     by: "by",
+    login_required_vote: "Please log in to vote",
 
     // modals.js
     post_quote: "Post a Quote",
@@ -134,6 +135,7 @@ const translations = {
     sure: "¿Seguro?",
     deleted: "¡Eliminado!",
     by: "por",
+    login_required_vote: "Inicia sesión para votar",
 
     // modals.js
     post_quote: "Publicar una Cita",
@@ -244,6 +246,7 @@ const translations = {
     sure: "Segur?",
     deleted: "Eliminat!",
     by: "per",
+    login_required_vote: "Inicia sessió per votar",
 
     // modals.js
     post_quote: "Publicar una Cita",

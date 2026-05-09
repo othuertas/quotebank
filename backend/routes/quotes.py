@@ -3,7 +3,7 @@ routes/quotes.py — CRUD endpoints for quotes.
 """
 
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, Request, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -17,14 +17,23 @@ router = APIRouter(prefix="/api/quotes", tags=["quotes"])
 PAGE_SIZE = 20
 
 
-def _build_quote_out(quote: Quote, db: Session, voter_ip: str) -> dict:
+def _build_quote_out(quote: Quote, db: Session, user_id: int | None) -> dict:
     """Build a QuoteOut-compatible dict from a Quote ORM object."""
-    # Fetch the voter's current vote for this quote
-    existing_vote = (
-        db.query(Vote)
-        .filter(Vote.content_type == "quote", Vote.content_id == quote.id, Vote.voter_ip == voter_ip)
-        .first()
-    )
+    user_vote = None
+    if user_id is not None:
+        # Fetched with a query filtered strictly by the current user's ID
+        existing_vote = (
+            db.query(Vote)
+            .filter(
+                Vote.content_type == "quote",
+                Vote.content_id == quote.id,
+                Vote.voter_user_id == user_id
+            )
+            .first()
+        )
+        if existing_vote:
+            user_vote = existing_vote.vote_value
+
     return {
         "id": quote.id,
         "text": quote.text,
@@ -36,19 +45,19 @@ def _build_quote_out(quote: Quote, db: Session, voter_ip: str) -> dict:
         "edited_at": quote.edited_at,
         "is_anonymous": quote.is_anonymous,
         "score": quote.score,
-        "user_vote": existing_vote.vote_value if existing_vote else None,
+        "user_vote": user_vote,
     }
 
 
 @router.get("", response_model=list[QuoteOut])
 def list_quotes(
-    request: Request,
+    current_user: User | None = Depends(get_optional_user),
     sort: str = Query("random", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     search: str = Query(None),
     db: Session = Depends(get_db),
 ):
-    voter_ip = request.client.host if request.client else "unknown"
+    user_id = current_user.id if current_user else None
 
     query = db.query(Quote)
     if search:
@@ -64,13 +73,12 @@ def list_quotes(
         query = query.order_by(func.random())
 
     quotes = query.offset((page - 1) * PAGE_SIZE).limit(PAGE_SIZE).all()
-    return [_build_quote_out(q, db, voter_ip) for q in quotes]
+    return [_build_quote_out(q, db, user_id) for q in quotes]
 
 
 @router.post("", response_model=QuoteOut, status_code=status.HTTP_201_CREATED)
 def create_quote(
     body: QuoteCreate,
-    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -85,15 +93,13 @@ def create_quote(
     db.commit()
     db.refresh(quote)
 
-    voter_ip = request.client.host if request.client else "unknown"
-    return _build_quote_out(quote, db, voter_ip)
+    return _build_quote_out(quote, db, current_user.id)
 
 
 @router.patch("/{quote_id}", response_model=QuoteOut)
 def update_quote(
     quote_id: int,
     body: QuoteUpdate,
-    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -114,8 +120,7 @@ def update_quote(
     db.commit()
     db.refresh(quote)
 
-    voter_ip = request.client.host if request.client else "unknown"
-    return _build_quote_out(quote, db, voter_ip)
+    return _build_quote_out(quote, db, current_user.id)
 
 
 @router.delete("/{quote_id}", status_code=status.HTTP_200_OK)
@@ -131,6 +136,11 @@ def delete_quote(
     if quote.posted_by_user_id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your quote")
 
+    # Also remove associated votes
+    db.query(Vote).filter(Vote.content_type == "quote", Vote.content_id == quote_id).delete()
+    db.delete(quote)
+    db.commit()
+    return {"detail": "Quote deleted"}
     # Also remove associated votes
     db.query(Vote).filter(Vote.content_type == "quote", Vote.content_id == quote_id).delete()
     db.delete(quote)

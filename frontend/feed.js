@@ -81,6 +81,7 @@ export async function loadFeedPage(type, append = false) {
     if (state.currentSearch && type === "quotes") {
       url += `&search=${encodeURIComponent(state.currentSearch)}`;
     }
+    url += `&_t=${Date.now()}`;
     const items = await api("GET", url);
 
     loadingEl.innerHTML = "";

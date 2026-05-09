@@ -6,9 +6,9 @@ Mounts all routers, serves static files (uploads + frontend), and creates DB tab
 
 import os
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 
 from backend.database import engine, Base
 from backend.routes import users, quotes, memes, votes, admin
@@ -49,3 +49,11 @@ def serve_frontend(full_path: str, response: Response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
     response.headers["Vary"] = "Accept-Language"
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
+# -- Middleware --
+async def no_cache_api(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api"):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+        response.headers["Vary"] = "Authorization"
+    return response

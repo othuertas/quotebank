@@ -1,5 +1,5 @@
 export const state = {
-  auth: { token: null, username: null, is_admin: false },
+  auth: { token: null, username: null, userId: null, is_admin: false },
   currentPage: 1,
   currentSort: "random",
   currentSearch: "",
