@@ -23,38 +23,106 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
+
+/* ── Mobile (≤ 640px) ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
+  /* Header */
   .header-inner {
-    padding: 0 16px;
-    height: 56px;
+    padding: 0 12px;
+    height: 54px;
+    gap: 8px;
   }
 
-  .logo { font-size: 1.05rem; }
+  .logo { font-size: 1.15rem; }
 
-  .nav a {
-    padding: 6px 14px;
-    font-size: 0.825rem;
+  /* Show only the ⇄ icon on mobile, hide the label text */
+  .switch-text { display: none; }
+  .switch-feed { gap: 0; font-size: 1.15rem; }
+
+  /* Shrink lang switcher */
+  .lang-switcher-wrap { gap: 2px; }
+  .lang-icon { font-size: 0.9rem; }
+  .lang-switcher { font-size: 0.8rem; }
+
+  /* Header right: tighter */
+  .header-right { gap: 6px; }
+  .theme-toggle { width: 36px; height: 36px; font-size: 1rem; }
+
+  /* Desktop user-info and auth-links: hidden on mobile — replaced by avatar menu */
+  .user-info, .auth-links { display: none; }
+
+  /* Logged-out buttons: smaller on mobile (if shown elsewhere) */
+  .btn-ghost { padding: 6px 10px; font-size: 0.8rem; }
+  .btn-accent { padding: 6px 12px; font-size: 0.8rem; }
+
+  /* Show the mobile avatar menu */
+  .user-menu-mobile { display: flex; }
+
+  /* Main content */
+  .main { padding: 16px 12px 100px; }
+
+  /* Cards */
+  .card { padding: 16px; margin-bottom: 12px; }
+  .quote-text { font-size: 1.1rem; margin: 12px 0; }
+  .meme-image-wrap { margin: -16px -16px 12px -16px; }
+  .meme-image { max-height: 320px; }
+
+  /* Card footer: keep inline but tighter */
+  .card-footer-minimal { margin-top: 12px; gap: 8px; }
+
+  /* Vote buttons: bigger tap target */
+  .vote-btn { width: 40px; height: 40px; font-size: 1.05rem; }
+
+  /* Feed controls: stack vertically, full-width */
+  .feed-controls-container { gap: 10px; margin-bottom: 16px; }
+  .feed-controls-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
   }
 
-  .main { padding: 20px 16px 60px; }
+  /* Search: full width on mobile */
+  .search-input { width: 100%; }
+  .search-input:focus { width: 100%; }
 
-  .card { padding: 20px; }
+  /* Sort buttons: icon-only by default; only the active one shows its label */
+  .sort-buttons { width: 100%; }
+  .sort-btn { justify-content: center; }
+  /* Kill hover-expand on touch — no hover on mobile */
+  .sort-btn:hover .sort-label {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+  }
+  /* Active button expands to fit its label naturally */
+  .sort-btn.active .sort-label {
+    max-width: 80px;
+    opacity: 1;
+    margin-left: 5px;
+  }
 
-  .meme-image-wrap { margin: -20px -20px 14px -20px; }
+  /* Post button */
+  .btn-post { padding: 13px 20px; font-size: 0.95rem; }
+  .btn-post.full-width { max-width: 100%; }
 
-  .feed-controls { flex-direction: column; align-items: stretch; }
+  /* Auth pages */
+  .auth-card { padding: 24px 16px; }
+  .auth-page { margin: 20px auto; }
 
-  .sort-buttons { justify-content: center; }
+  /* Profile */
+  .profile-grid { grid-template-columns: 1fr; }
 
-  .btn-post { text-align: center; }
+  /* Card delete button: bigger tap target */
+  .card-delete-btn { padding: 6px 12px; min-width: 44px; }
 
-  .auth-card { padding: 28px 20px; }
+  /* Load more */
+  .btn-load-more { width: 100%; padding: 14px; }
+}
 
-  .modal { padding: 24px; }
-
-  .card-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
-
-  .vote-controls { align-self: flex-end; }
+/* ── Very small screens (≤ 380px) ─────────────────────────────────────── */
+@media (max-width: 380px) {
+  .logo { font-size: 1rem; }
+  .header-inner { padding: 0 10px; }
 }
 
 /* ── Utilities ─────────────────────────────────────────────────────────── */
@@ -84,6 +152,15 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .toast-container {
+    top: auto;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    left: 12px;
+  }
 }
 
 .toast {
@@ -120,7 +197,7 @@
 /* ── Go To Top ─────────────────────────────────────────────────────────── */
 .go-to-top {
   position: fixed;
-  bottom: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   right: 24px;
   width: 48px;
   height: 48px;

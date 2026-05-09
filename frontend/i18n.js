@@ -83,6 +83,7 @@ const translations = {
     logged_out: "Logged out",
     log_in: "Log in",
     sign_up: "Sign up",
+    access: "Access",
     welcome_back: "Welcome back",
     create_account: "Create an account",
     login_subtitle: "Log in to start posting",
@@ -94,6 +95,7 @@ const translations = {
     no_account: "Don't have an account?",
     has_account: "Already have an account?",
     welcome_back_toast: "Welcome back!",
+    welcome_guest: "Welcome!",
     account_created: "Account created!",
 
     // utils.js timeAgo
@@ -186,6 +188,7 @@ const translations = {
     logged_out: "Sesión cerrada",
     log_in: "Iniciar sesión",
     sign_up: "Registrarse",
+    access: "Acceder",
     welcome_back: "Bienvenido de nuevo",
     create_account: "Crear una cuenta",
     login_subtitle: "Inicia sesión para empezar a publicar",
@@ -197,6 +200,7 @@ const translations = {
     no_account: "¿No tienes una cuenta?",
     has_account: "¿Ya tienes una cuenta?",
     welcome_back_toast: "¡Bienvenido de nuevo!",
+    welcome_guest: "¡Bienvenido!",
     account_created: "¡Cuenta creada!",
 
     // utils.js timeAgo
@@ -289,6 +293,7 @@ const translations = {
     logged_out: "Sessió tancada",
     log_in: "Iniciar sessió",
     sign_up: "Registrar-se",
+    access: "Accedir",
     welcome_back: "Benvingut de nou",
     create_account: "Crear un compte",
     login_subtitle: "Inicia sessió per començar a publicar",
@@ -300,6 +305,7 @@ const translations = {
     no_account: "No tens un compte?",
     has_account: "Ja tens un compte?",
     welcome_back_toast: "Benvingut de nou!",
+    welcome_guest: "Benvingut!",
     account_created: "Compte creat!",
 
     // utils.js timeAgo

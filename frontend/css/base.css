@@ -116,9 +116,24 @@ button {
   border: none;
   background: none;
   color: inherit;
+  /* Remove 300ms tap delay on mobile */
+  touch-action: manipulation;
+}
+
+a {
+  touch-action: manipulation;
 }
 
 input, textarea {
   font-family: var(--font-body);
   color: var(--text-primary);
+  /* Prevent iOS auto-zoom (requires font-size ≥ 16px on focus) */
+  font-size: max(16px, 1em);
+}
+
+/* Override font-size back to design size at tablet+ */
+@media (min-width: 641px) {
+  input, textarea {
+    font-size: inherit;
+  }
 }
