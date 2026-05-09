@@ -1,6 +1,6 @@
 import { state, dom } from "./state.js";
 import { api, toast } from "./api.js";
-import { quoteCard, memeCard, attachVoteListeners, attachDeleteListeners, attachExpandListeners } from "./cards.js";
+import { quoteCard, memeCard, attachVoteListeners, attachDeleteListeners, attachEditListeners, attachExpandListeners } from "./cards.js";
 import { openQuoteModal, openMemeModal } from "./modals.js";
 import { t } from "./i18n.js";
 
@@ -12,10 +12,10 @@ export function renderFeed(type) {
     <div class="feed-controls-container">
       <div class="feed-controls-top">
         <div class="sort-buttons" id="sort-buttons">
-          <button class="sort-btn active" data-sort="new"><span class="sort-icon">🆕</span><span class="sort-label">${t("sort_new")}</span></button>
+          <button class="sort-btn" data-sort="new"><span class="sort-icon">🆕</span><span class="sort-label">${t("sort_new")}</span></button>
           <button class="sort-btn" data-sort="top"><span class="sort-icon">🔥</span><span class="sort-label">${t("sort_top")}</span></button>
           <button class="sort-btn" data-sort="old"><span class="sort-icon">📅</span><span class="sort-label">${t("sort_old")}</span></button>
-          <button class="sort-btn" data-sort="random"><span class="sort-icon">🎲</span><span class="sort-label">${t("sort_random")}</span></button>
+          <button class="sort-btn active" data-sort="random"><span class="sort-icon">🎲</span><span class="sort-label">${t("sort_random")}</span></button>
         </div>
         ${isQuotes ? `<input type="text" id="search-input" class="search-input" placeholder="${t("search_placeholder")}">` : ''}
       </div>
@@ -106,6 +106,7 @@ export async function loadFeedPage(type, append = false) {
 
     attachVoteListeners(list, type);
     attachDeleteListeners(list, type);
+    attachEditListeners(list, type);
     attachExpandListeners(list);
 
     document.getElementById("load-more-wrap").classList.toggle("hidden", items.length < 20);

@@ -23,6 +23,7 @@ class UserLogin(BaseModel):
 class AuthResponse(BaseModel):
     access_token: str
     username: str
+    user_id: int
     is_admin: bool = False
 
 
@@ -73,6 +74,13 @@ class QuoteCreate(BaseModel):
     text: str = Field(..., min_length=1)
     attributed_author: str = Field(..., min_length=1)
     said_at: Optional[str] = None
+    is_anonymous: bool = False
+
+
+class QuoteUpdate(BaseModel):
+    text: Optional[str] = Field(None, min_length=1)
+    attributed_author: Optional[str] = Field(None, min_length=1)
+    said_at: Optional[str] = None
 
 
 class QuoteOut(BaseModel):
@@ -83,6 +91,8 @@ class QuoteOut(BaseModel):
     posted_by_username: str
     posted_by_user_id: int
     publish_date: datetime
+    edited_at: Optional[datetime] = None
+    is_anonymous: bool
     score: int
     user_vote: Optional[int] = None  # current viewer's vote (+1, -1, or None)
 
@@ -100,11 +110,17 @@ class MemeOut(BaseModel):
     posted_by_username: str
     posted_by_user_id: int
     publish_date: datetime
+    edited_at: Optional[datetime] = None
+    is_anonymous: bool
     score: int
     user_vote: Optional[int] = None
 
     class Config:
         from_attributes = True
+
+
+class MemeUpdate(BaseModel):
+    caption: Optional[str] = None
 
 
 # ── Vote ────────────────────────────────────────────────────────────────────────

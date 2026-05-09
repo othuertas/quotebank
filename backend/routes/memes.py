@@ -5,13 +5,14 @@ routes/memes.py — CRUD endpoints for memes (with image upload).
 import os
 import uuid
 
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, Query, UploadFile, File, Form, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from backend.database import get_db
 from backend.models import Meme, Vote, User
-from backend.schemas import MemeOut
+from backend.schemas import MemeOut, MemeUpdate
 from backend.auth import get_current_user
 
 router = APIRouter(prefix="/api/memes", tags=["memes"])
@@ -34,9 +35,11 @@ def _build_meme_out(meme: Meme, db: Session, voter_ip: str) -> dict:
         "image_filename": meme.image_filename,
         "caption": meme.caption,
         "credited_author": meme.credited_author,
-        "posted_by_username": meme.posted_by_user.username,
+        "posted_by_username": "Anonymous" if meme.is_anonymous else meme.posted_by_user.username,
         "posted_by_user_id": meme.posted_by_user_id,
         "publish_date": meme.publish_date,
+        "edited_at": meme.edited_at,
+        "is_anonymous": meme.is_anonymous,
         "score": meme.score,
         "user_vote": existing_vote.vote_value if existing_vote else None,
     }
@@ -45,7 +48,7 @@ def _build_meme_out(meme: Meme, db: Session, voter_ip: str) -> dict:
 @router.get("", response_model=list[MemeOut])
 def list_memes(
     request: Request,
-    sort: str = Query("new", pattern="^(top|new|old|random)$"),
+    sort: str = Query("random", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     db: Session = Depends(get_db),
 ):
@@ -71,6 +74,7 @@ async def create_meme(
     image: UploadFile = File(...),
     caption: str = Form(default=""),
     credited_author: str = Form(default=""),
+    is_anonymous: bool = Form(default=False),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -93,9 +97,35 @@ async def create_meme(
         image_filename=unique_name,
         caption=caption or None,
         credited_author=credited_author or None,
+        is_anonymous=is_anonymous,
         posted_by_user_id=current_user.id,
     )
     db.add(meme)
+    db.commit()
+    db.refresh(meme)
+
+    voter_ip = request.client.host if request.client else "unknown"
+    return _build_meme_out(meme, db, voter_ip)
+
+
+@router.patch("/{meme_id}", response_model=MemeOut)
+def update_meme(
+    meme_id: int,
+    body: MemeUpdate,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    meme = db.query(Meme).filter(Meme.id == meme_id).first()
+    if not meme:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meme not found")
+    if meme.posted_by_user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your meme")
+
+    if body.caption is not None:
+        meme.caption = body.caption or None
+
+    meme.edited_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(meme)
 

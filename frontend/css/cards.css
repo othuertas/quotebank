@@ -177,7 +177,8 @@
 .vote-score.negative { color: var(--score-negative); }
 .vote-score.zero     { color: var(--score-zero); }
 
-.card-delete-btn {
+.card-delete-btn,
+.card-edit-btn {
   padding: 4px 10px;
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
@@ -191,4 +192,10 @@
   color: var(--negative);
   border-color: var(--negative);
   background: var(--negative-glow);
+}
+
+.card-edit-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
 }

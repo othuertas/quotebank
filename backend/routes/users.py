@@ -40,7 +40,7 @@ def register(body: UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
 
     token = create_access_token(user.id, user.username, user.is_admin)
-    return AuthResponse(access_token=token, username=user.username, is_admin=user.is_admin)
+    return AuthResponse(access_token=token, username=user.username, user_id=user.id, is_admin=user.is_admin)
 
 
 @router.post("/login", response_model=AuthResponse)
@@ -53,7 +53,7 @@ def login(body: UserLogin, db: Session = Depends(get_db)):
         )
 
     token = create_access_token(user.id, user.username, user.is_admin)
-    return AuthResponse(access_token=token, username=user.username, is_admin=user.is_admin)
+    return AuthResponse(access_token=token, username=user.username, user_id=user.id, is_admin=user.is_admin)
 
 
 # ── User Profile ────────────────────────────────────────────────────────────────

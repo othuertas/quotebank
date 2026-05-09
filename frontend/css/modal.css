@@ -137,3 +137,33 @@
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ── Checkbox ─────────────────────────────────────────────────────────── */
+.checkbox-group {
+  margin-top: 16px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.checkbox-container input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.checkbox-label {
+  transition: color var(--transition-fast);
+}
+
+.checkbox-container:hover .checkbox-label {
+  color: var(--text-primary);
+}

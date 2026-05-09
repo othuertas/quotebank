@@ -2,13 +2,14 @@
 routes/quotes.py — CRUD endpoints for quotes.
 """
 
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from backend.database import get_db
 from backend.models import Quote, Vote, User
-from backend.schemas import QuoteCreate, QuoteOut
+from backend.schemas import QuoteCreate, QuoteOut, QuoteUpdate
 from backend.auth import get_current_user, get_optional_user
 
 router = APIRouter(prefix="/api/quotes", tags=["quotes"])
@@ -29,9 +30,11 @@ def _build_quote_out(quote: Quote, db: Session, voter_ip: str) -> dict:
         "text": quote.text,
         "attributed_author": quote.attributed_author,
         "said_at": quote.said_at,
-        "posted_by_username": quote.posted_by_user.username,
+        "posted_by_username": "Anonymous" if quote.is_anonymous else quote.posted_by_user.username,
         "posted_by_user_id": quote.posted_by_user_id,
         "publish_date": quote.publish_date,
+        "edited_at": quote.edited_at,
+        "is_anonymous": quote.is_anonymous,
         "score": quote.score,
         "user_vote": existing_vote.vote_value if existing_vote else None,
     }
@@ -40,7 +43,7 @@ def _build_quote_out(quote: Quote, db: Session, voter_ip: str) -> dict:
 @router.get("", response_model=list[QuoteOut])
 def list_quotes(
     request: Request,
-    sort: str = Query("new", pattern="^(top|new|old|random)$"),
+    sort: str = Query("random", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     search: str = Query(None),
     db: Session = Depends(get_db),
@@ -75,9 +78,39 @@ def create_quote(
         text=body.text,
         attributed_author=body.attributed_author,
         said_at=body.said_at,
+        is_anonymous=body.is_anonymous,
         posted_by_user_id=current_user.id,
     )
     db.add(quote)
+    db.commit()
+    db.refresh(quote)
+
+    voter_ip = request.client.host if request.client else "unknown"
+    return _build_quote_out(quote, db, voter_ip)
+
+
+@router.patch("/{quote_id}", response_model=QuoteOut)
+def update_quote(
+    quote_id: int,
+    body: QuoteUpdate,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    quote = db.query(Quote).filter(Quote.id == quote_id).first()
+    if not quote:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quote not found")
+    if quote.posted_by_user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your quote")
+
+    if body.text is not None:
+        quote.text = body.text
+    if body.attributed_author is not None:
+        quote.attributed_author = body.attributed_author
+    if body.said_at is not None:
+        quote.said_at = body.said_at
+
+    quote.edited_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(quote)
 

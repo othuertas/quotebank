@@ -5,10 +5,18 @@ import { t } from "./i18n.js";
 
 export function quoteCard(q, index) {
   const delay = index * 0.04;
-  const canDelete = state.auth.token && (q.posted_by_username === state.auth.username || state.auth.is_admin);
-  const deleteBtn = canDelete
+  const isAuthor = state.auth.token && q.posted_by_user_id === state.auth.userId;
+  const canModify = state.auth.token && (isAuthor || state.auth.is_admin);
+  
+  const editBtn = canModify
+    ? `<button class="card-edit-btn" data-id="${q.id}" data-type="quotes">✏️</button>`
+    : "";
+  const deleteBtn = canModify
     ? `<button class="card-delete-btn" data-id="${q.id}" data-type="quotes">🗑️</button>`
     : "";
+
+  const authorDisplay = q.is_anonymous ? t("anonymous") : `@${escHtml(q.posted_by_username)}`;
+  const editedMark = q.edited_at ? ` (${t("edited")} ${timeAgo(q.edited_at)})` : "";
 
   return `
     <article class="card quote-card" style="animation-delay:${delay}s" data-content-type="quote" data-content-id="${q.id}">
@@ -21,7 +29,7 @@ export function quoteCard(q, index) {
       </div>
       <div class="card-footer-minimal">
         <div class="meta-minimal">
-          @${escHtml(q.posted_by_username)} · ${timeAgo(q.publish_date)}
+          ${authorDisplay} · ${timeAgo(q.publish_date)}${editedMark}
         </div>
         <div class="controls-minimal">
           <div class="vote-controls-minimal">
@@ -29,6 +37,7 @@ export function quoteCard(q, index) {
             <span class="vote-score ${scoreClass(q.score)}">${q.score}</span>
             <button class="vote-btn downvote ${q.user_vote === -1 ? 'active' : ''}" data-value="-1" aria-label="Downvote">▼</button>
           </div>
+          ${editBtn}
           ${deleteBtn}
         </div>
       </div>
@@ -38,10 +47,18 @@ export function quoteCard(q, index) {
 
 export function memeCard(m, index) {
   const delay = index * 0.04;
-  const canDelete = state.auth.token && (m.posted_by_username === state.auth.username || state.auth.is_admin);
-  const deleteBtn = canDelete
+  const isAuthor = state.auth.token && m.posted_by_user_id === state.auth.userId;
+  const canModify = state.auth.token && (isAuthor || state.auth.is_admin);
+  
+  const editBtn = canModify
+    ? `<button class="card-edit-btn" data-id="${m.id}" data-type="memes">✏️</button>`
+    : "";
+  const deleteBtn = canModify
     ? `<button class="card-delete-btn" data-id="${m.id}" data-type="memes">🗑️</button>`
     : "";
+
+  const authorDisplay = m.is_anonymous ? t("anonymous") : `@${escHtml(m.posted_by_username)}`;
+  const editedMark = m.edited_at ? ` (${t("edited")} ${timeAgo(m.edited_at)})` : "";
 
   return `
     <article class="card" style="animation-delay:${delay}s" data-content-type="meme" data-content-id="${m.id}">
@@ -52,7 +69,7 @@ export function memeCard(m, index) {
       ${m.credited_author ? `<p class="meme-credited">${t("by")} ${escHtml(m.credited_author)}</p>` : ""}
       <div class="card-footer-minimal">
         <div class="meta-minimal">
-          @${escHtml(m.posted_by_username)} · ${timeAgo(m.publish_date)}
+          ${authorDisplay} · ${timeAgo(m.publish_date)}${editedMark}
         </div>
         <div class="controls-minimal">
           <div class="vote-controls-minimal">
@@ -60,6 +77,7 @@ export function memeCard(m, index) {
             <span class="vote-score ${scoreClass(m.score)}">${m.score}</span>
             <button class="vote-btn downvote ${m.user_vote === -1 ? 'active' : ''}" data-value="-1" aria-label="Downvote">▼</button>
           </div>
+          ${editBtn}
           ${deleteBtn}
         </div>
       </div>
@@ -67,10 +85,38 @@ export function memeCard(m, index) {
   `;
 }
 
+// Dynamic import used in attachEditListeners to avoid circular dependency
+
+export function attachEditListeners(container, type) {
+  container.querySelectorAll(".card-edit-btn:not([data-bound])").forEach(btn => {
+    btn.setAttribute("data-bound", "1");
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const { openEditQuoteModal, openEditMemeModal } = await import("./modals.js");
+      const id = btn.dataset.id;
+      const endpointType = btn.dataset.type;
+      
+      const card = btn.closest(".card");
+      if (endpointType === "quotes") {
+        const text = card.querySelector(".quote-text").textContent.replace(/^“|”$/g, "");
+        const author = card.querySelector(".quote-author").textContent.replace(/^— /, "");
+        const saidAtEl = card.querySelector(".quote-said-at");
+        const saidAt = saidAtEl ? saidAtEl.textContent.replace(/^ · /, "") : "";
+        openEditQuoteModal({ id, text, attributed_author: author, said_at: saidAt });
+      } else {
+        const captionEl = card.querySelector(".meme-caption");
+        const caption = captionEl ? captionEl.textContent : "";
+        openEditMemeModal({ id, caption });
+      }
+    });
+  });
+}
+
 export function attachVoteListeners(container, type) {
   container.querySelectorAll(".vote-btn:not([data-bound])").forEach(btn => {
     btn.setAttribute("data-bound", "1");
-    btn.addEventListener("click", async () => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
       const card = btn.closest(".card");
       const contentType = card.dataset.contentType;
       const contentId = parseInt(card.dataset.contentId, 10);
@@ -125,7 +171,8 @@ export function attachVoteListeners(container, type) {
 export function attachDeleteListeners(container, type) {
   container.querySelectorAll(".card-delete-btn:not([data-bound])").forEach(btn => {
     btn.setAttribute("data-bound", "1");
-    btn.addEventListener("click", async () => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
       if (btn.dataset.confirming === "1") return;
       if (!btn.dataset.confirmed) {
         btn.dataset.confirming = "1";
@@ -134,7 +181,8 @@ export function attachDeleteListeners(container, type) {
         btn.style.color = "var(--negative)";
         btn.style.borderColor = "var(--negative)";
         const timer = setTimeout(() => { btn.innerHTML = orig; btn.style.color = ""; btn.style.borderColor = ""; delete btn.dataset.confirming; }, 2500);
-        btn.addEventListener("click", async function confirmClick() {
+        btn.addEventListener("click", async function confirmClick(e2) {
+          e2.stopPropagation();
           clearTimeout(timer);
           btn.removeEventListener("click", confirmClick);
           delete btn.dataset.confirming;

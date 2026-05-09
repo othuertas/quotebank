@@ -10,7 +10,12 @@ export function loadAuth() {
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed.token && parsed.username) {
-        state.auth = { token: parsed.token, username: parsed.username, is_admin: !!parsed.is_admin };
+        state.auth = {
+          token: parsed.token,
+          username: parsed.username,
+          userId: parsed.userId,
+          is_admin: !!parsed.is_admin
+        };
       }
     }
   } catch (_) { /* ignore */ }
@@ -193,7 +198,12 @@ export function renderAuth(mode) {
     try {
       const endpoint = isLogin ? "/auth/login" : "/auth/register";
       const data = await api("POST", endpoint, { username, password });
-      state.auth = { token: data.access_token, username: data.username, is_admin: !!data.is_admin };
+      state.auth = {
+        token: data.access_token,
+        username: data.username,
+        userId: data.user_id,
+        is_admin: !!data.is_admin
+      };
       saveAuth();
       renderAuthArea();
       toast(isLogin ? t("welcome_back_toast") : t("account_created"));

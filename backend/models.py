@@ -41,6 +41,8 @@ class Quote(Base):
     said_at = Column(String(256), nullable=True)
     posted_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     publish_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    edited_at = Column(DateTime, nullable=True)
+    is_anonymous = Column(Boolean, default=False, nullable=False)
     score = Column(Integer, default=0)
 
     posted_by_user = relationship("User", back_populates="quotes")
@@ -55,6 +57,8 @@ class Meme(Base):
     credited_author = Column(String(256), nullable=True)
     posted_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     publish_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    edited_at = Column(DateTime, nullable=True)
+    is_anonymous = Column(Boolean, default=False, nullable=False)
     score = Column(Integer, default=0)
 
     posted_by_user = relationship("User", back_populates="memes")

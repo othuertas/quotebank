@@ -45,6 +45,11 @@ const translations = {
     btn_post_meme: "Post Meme",
     meme_posted: "Meme posted!",
     please_select_image: "Please select an image",
+    edit_quote: "Edit Quote",
+    edit_meme: "Edit Meme",
+    post_anonymous: "Post Anonymously",
+    anonymous: "Anonymous",
+    edited: "edited",
 
     // pages.js
     your_profile: "Your Profile",
@@ -150,6 +155,11 @@ const translations = {
     btn_post_meme: "Publicar Meme",
     meme_posted: "¡Meme publicado!",
     please_select_image: "Por favor, selecciona una imagen",
+    edit_quote: "Editar Cita",
+    edit_meme: "Editar Meme",
+    post_anonymous: "Publicar Anónimamente",
+    anonymous: "Anónimo",
+    edited: "editado",
 
     // pages.js
     your_profile: "Tu Perfil",
@@ -255,6 +265,11 @@ const translations = {
     btn_post_meme: "Publicar Mem",
     meme_posted: "Mem publicat!",
     please_select_image: "Si us plau, selecciona una imatge",
+    edit_quote: "Editar Cita",
+    edit_meme: "Editar Mem",
+    post_anonymous: "Publicar Anònimament",
+    anonymous: "Anònim",
+    edited: "editat",
 
     // pages.js
     your_profile: "El Teu Perfil",

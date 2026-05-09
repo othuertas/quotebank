@@ -1,7 +1,7 @@
 export const state = {
   auth: { token: null, username: null, is_admin: false },
   currentPage: 1,
-  currentSort: "new",
+  currentSort: "random",
   currentSearch: "",
   isLoading: false,
   searchTimeout: null,
