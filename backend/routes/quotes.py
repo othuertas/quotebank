@@ -52,7 +52,7 @@ def _build_quote_out(quote: Quote, db: Session, user_id: int | None) -> dict:
 @router.get("", response_model=list[QuoteOut])
 def list_quotes(
     current_user: User | None = Depends(get_optional_user),
-    sort: str = Query("random", pattern="^(top|new|old|random)$"),
+    sort: str = Query("new", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     search: str = Query(None),
     db: Session = Depends(get_db),
@@ -136,11 +136,6 @@ def delete_quote(
     if quote.posted_by_user_id != current_user.id and not current_user.is_admin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your quote")
 
-    # Also remove associated votes
-    db.query(Vote).filter(Vote.content_type == "quote", Vote.content_id == quote_id).delete()
-    db.delete(quote)
-    db.commit()
-    return {"detail": "Quote deleted"}
     # Also remove associated votes
     db.query(Vote).filter(Vote.content_type == "quote", Vote.content_id == quote_id).delete()
     db.delete(quote)

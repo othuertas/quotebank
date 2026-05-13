@@ -11,7 +11,7 @@ export async function renderProfile() {
   dom.app.innerHTML = `
     <div class="profile-page">
       <div class="profile-header">
-        <h2>${t("your_profile")}</h2>
+        <h2>${t("user_settings")}</h2>
         <p class="subtitle" id="profile-info">${t("loading")}</p>
       </div>
       <div class="profile-grid">
@@ -118,8 +118,9 @@ export async function renderAdmin() {
           </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn-ghost admin-edit-username" data-id="${u.id}" style="font-size:0.8rem">${t("edit_username")}</button>
           <button class="btn-ghost admin-reset-pw" data-id="${u.id}" style="font-size:0.8rem">${t("reset_pw")}</button>
-          <button class="btn-ghost admin-toggle-role" data-id="${u.id}" style="font-size:0.8rem">
+          <button class="btn-ghost admin-toggle-role" data-id="${u.id}" data-is-admin="${u.is_admin}" style="font-size:0.8rem">
             ${u.is_admin ? t("remove_admin") : t("make_admin")}
           </button>
           <button class="btn-logout admin-delete-user" data-id="${u.id}" data-name="${escHtml(u.username)}" style="font-size:0.8rem">
@@ -128,6 +129,46 @@ export async function renderAdmin() {
         </div>
       </div>
     `).join("");
+
+    list.querySelectorAll(".admin-edit-username").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const card = btn.closest(".card");
+        const existing = card.querySelector(".edit-username-inline");
+        if (existing) { existing.remove(); return; }
+
+        const wrap = document.createElement("div");
+        wrap.className = "edit-username-inline";
+        wrap.style.cssText = "display:flex;gap:8px;align-items:center;margin-top:12px;width:100%";
+        wrap.innerHTML = `
+          <input type="text" placeholder="${t("new_username_placeholder")}" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-primary);font-size:0.85rem">
+          <button class="btn-accent" style="padding:8px 14px;font-size:0.8rem;white-space:nowrap">${t("save")}</button>
+          <button class="btn-ghost" style="padding:8px;font-size:0.8rem">✕</button>
+        `;
+        card.appendChild(wrap);
+
+        const input = wrap.querySelector("input");
+        const saveBtn = wrap.querySelector(".btn-accent");
+        const cancelBtn = wrap.querySelector(".btn-ghost");
+        input.focus();
+
+        cancelBtn.addEventListener("click", () => wrap.remove());
+        saveBtn.addEventListener("click", async () => {
+          const newUsername = input.value.trim();
+          if (!newUsername || newUsername.length < 2) { input.style.borderColor = "var(--negative)"; return; }
+          try {
+            await api("POST", `/admin/users/${btn.dataset.id}/update`, { username: newUsername });
+            toast(t("username_updated"));
+            renderAdmin();
+          } catch (err) { toast(err.message, "error"); }
+        });
+
+        input.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter") saveBtn.click();
+          if (ev.key === "Escape") wrap.remove();
+        });
+      });
+    });
 
     list.querySelectorAll(".admin-reset-pw").forEach(btn => {
       btn.addEventListener("click", (e) => {
@@ -172,7 +213,8 @@ export async function renderAdmin() {
     list.querySelectorAll(".admin-toggle-role").forEach(btn => {
       btn.addEventListener("click", async () => {
         try {
-          await api("PUT", `/admin/users/${btn.dataset.id}/role`);
+          const newAdminStatus = btn.dataset.isAdmin === "true" ? false : true;
+          await api("POST", `/admin/users/${btn.dataset.id}/update`, { is_admin: newAdminStatus });
           toast(t("role_updated"));
           renderAdmin();
         } catch (err) { toast(err.message, "error"); }

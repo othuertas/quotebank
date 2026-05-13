@@ -27,7 +27,7 @@ app.include_router(users.router)
 app.include_router(quotes.router)
 app.include_router(memes.router)
 app.include_router(votes.router)
-app.include_router(admin.router)
+app.include_router(admin.router, prefix="/api")
 
 # ── Static file serving ────────────────────────────────────────────────────────
 

@@ -12,7 +12,7 @@ from backend.models import User, Quote, Meme, Vote
 from backend.schemas import AdminUserOut, AdminResetPasswordRequest, AdminUpdateUserRequest
 from backend.auth import require_admin, hash_password
 
-router = APIRouter(prefix="/api/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"])
 
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
 
@@ -56,8 +56,8 @@ def admin_reset_password(
     return {"detail": f"Password reset for user '{user.username}'"}
 
 
-@router.put("/users/{user_id}/role")
-def admin_update_role(
+@router.post("/users/{user_id}/update")
+def admin_update_user(
     user_id: int,
     body: AdminUpdateUserRequest,
     admin: User = Depends(require_admin),
@@ -67,13 +67,23 @@ def admin_update_role(
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    if user.id == admin.id:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot change your own admin status")
-
     if body.is_admin is not None:
+        if user.id == admin.id:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot change your own admin status")
         user.is_admin = body.is_admin
+
+    if body.username is not None:
+        new_username = body.username.strip()
+        if new_username != user.username:
+            # Check if username exists
+            existing = db.query(User).filter(User.username == new_username).first()
+            if existing:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already taken")
+            user.username = new_username
+
     db.commit()
-    return {"detail": f"User '{user.username}' updated", "is_admin": user.is_admin}
+    db.refresh(user)
+    return {"detail": f"User '{user.username}' updated", "is_admin": user.is_admin, "username": user.username}
 
 
 @router.delete("/users/{user_id}")

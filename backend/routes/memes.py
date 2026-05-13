@@ -58,7 +58,7 @@ def _build_meme_out(meme: Meme, db: Session, user_id: int | None) -> dict:
 @router.get("", response_model=list[MemeOut])
 def list_memes(
     current_user: User | None = Depends(get_optional_user),
-    sort: str = Query("random", pattern="^(top|new|old|random)$"),
+    sort: str = Query("new", pattern="^(top|new|old|random)$"),
     page: int = Query(1, ge=1),
     db: Session = Depends(get_db),
 ):

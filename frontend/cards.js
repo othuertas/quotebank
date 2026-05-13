@@ -37,8 +37,8 @@ export function quoteCard(q, index) {
             <span class="vote-score ${scoreClass(q.score)}">${q.score}</span>
             <button class="vote-btn downvote ${q.user_vote === -1 ? 'active' : ''}" data-value="-1" aria-label="Downvote">▼</button>
           </div>
-          ${editBtn}
           ${deleteBtn}
+          ${editBtn}
         </div>
       </div>
     </article>
@@ -77,8 +77,8 @@ export function memeCard(m, index) {
             <span class="vote-score ${scoreClass(m.score)}">${m.score}</span>
             <button class="vote-btn downvote ${m.user_vote === -1 ? 'active' : ''}" data-value="-1" aria-label="Downvote">▼</button>
           </div>
-          ${editBtn}
           ${deleteBtn}
+          ${editBtn}
         </div>
       </div>
     </article>
@@ -87,7 +87,7 @@ export function memeCard(m, index) {
 
 // Dynamic import used in attachEditListeners to avoid circular dependency
 
-export function attachEditListeners(container, type) {
+export function attachEditListeners(container) {
   container.querySelectorAll(".card-edit-btn:not([data-bound])").forEach(btn => {
     btn.setAttribute("data-bound", "1");
     btn.addEventListener("click", async (e) => {
@@ -112,7 +112,7 @@ export function attachEditListeners(container, type) {
   });
 }
 
-export function attachVoteListeners(container, type) {
+export function attachVoteListeners(container) {
   container.querySelectorAll(".vote-btn:not([data-bound])").forEach(btn => {
     btn.setAttribute("data-bound", "1");
     btn.addEventListener("click", async (e) => {
@@ -162,39 +162,39 @@ export function attachVoteListeners(container, type) {
   });
 }
 
-export function attachDeleteListeners(container, type) {
+export function attachDeleteListeners(container) {
   container.querySelectorAll(".card-delete-btn:not([data-bound])").forEach(btn => {
     btn.setAttribute("data-bound", "1");
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      if (btn.dataset.confirming === "1") return;
-      if (!btn.dataset.confirmed) {
-        btn.dataset.confirming = "1";
-        const orig = btn.innerHTML;
-        btn.innerHTML = t("sure");
-        btn.style.color = "var(--negative)";
-        btn.style.borderColor = "var(--negative)";
-        const timer = setTimeout(() => { btn.innerHTML = orig; btn.style.color = ""; btn.style.borderColor = ""; delete btn.dataset.confirming; }, 2500);
-        btn.addEventListener("click", async function confirmClick(e2) {
-          e2.stopPropagation();
-          clearTimeout(timer);
-          btn.removeEventListener("click", confirmClick);
-          delete btn.dataset.confirming;
-          const id = btn.dataset.id;
-          const endpointType = btn.dataset.type;
-          try {
-            await api("DELETE", `/${endpointType}/${id}`);
-            btn.closest(".card").remove();
-            toast(t("deleted"));
-          } catch (err) {
-            toast(err.message, "error");
-            btn.innerHTML = orig;
-            btn.style.color = "";
-            btn.style.borderColor = "";
-          }
-        }, { once: true });
+      if (btn.dataset.confirming === "1") {
+        const id = btn.dataset.id;
+        const endpointType = btn.dataset.type;
+        try {
+          await api("DELETE", `/${endpointType}/${id}`);
+          btn.closest(".card").remove();
+          toast(t("deleted"));
+        } catch (err) {
+          toast(err.message, "error");
+          reset();
+        }
         return;
       }
+
+      const orig = btn.innerHTML;
+      const reset = () => {
+        btn.innerHTML = orig;
+        btn.classList.remove("confirming");
+        delete btn.dataset.confirming;
+      };
+
+      btn.dataset.confirming = "1";
+      btn.classList.add("confirming");
+      btn.innerHTML = "❓"; // Simple question mark emoji for confirmation
+      
+      setTimeout(() => {
+        if (btn.dataset.confirming === "1") reset();
+      }, 3000);
     });
   });
 }

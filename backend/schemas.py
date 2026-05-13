@@ -66,6 +66,7 @@ class AdminResetPasswordRequest(BaseModel):
 
 class AdminUpdateUserRequest(BaseModel):
     is_admin: Optional[bool] = None
+    username: Optional[str] = Field(None, min_length=2, max_length=64)
 
 
 # ── Quote ───────────────────────────────────────────────────────────────────────

@@ -25,6 +25,8 @@ const translations = {
     deleted: "Deleted!",
     by: "by",
     login_required_vote: "Please log in to vote",
+    edit: "Edit",
+    delete: "Delete",
 
     // modals.js
     post_quote: "Post a Quote",
@@ -53,7 +55,7 @@ const translations = {
     edited: "edited",
 
     // pages.js
-    your_profile: "Your Profile",
+    user_settings: "User Settings",
     loading: "Loading...",
     change_password: "Change Password",
     current_password: "Current Password",
@@ -83,6 +85,9 @@ const translations = {
     role_updated: "Role updated",
     user_deleted: "User deleted",
     admin_required: "Admin access required",
+    edit_username: "✏️ Edit Username",
+    new_username_placeholder: "New username",
+    username_updated: "Username updated successfully",
 
     // auth.js
     logout: "Logout",
@@ -136,6 +141,8 @@ const translations = {
     deleted: "¡Eliminado!",
     by: "por",
     login_required_vote: "Inicia sesión para votar",
+    edit: "Editar",
+    delete: "Eliminar",
 
     // modals.js
     post_quote: "Publicar una Cita",
@@ -164,7 +171,7 @@ const translations = {
     edited: "editado",
 
     // pages.js
-    your_profile: "Tu Perfil",
+    user_settings: "Ajustes de Usuario",
     loading: "Cargando...",
     change_password: "Cambiar Contraseña",
     current_password: "Contraseña Actual",
@@ -194,6 +201,9 @@ const translations = {
     role_updated: "Rol actualizado",
     user_deleted: "Usuario eliminado",
     admin_required: "Se requiere acceso de administrador",
+    edit_username: "✏️ Editar Usuario",
+    new_username_placeholder: "Nuevo usuario",
+    username_updated: "Usuario actualizado con éxito",
 
     // auth.js
     logout: "Cerrar sesión",
@@ -247,6 +257,8 @@ const translations = {
     deleted: "Eliminat!",
     by: "per",
     login_required_vote: "Inicia sessió per votar",
+    edit: "Editar",
+    delete: "Eliminar",
 
     // modals.js
     post_quote: "Publicar una Cita",
@@ -275,7 +287,7 @@ const translations = {
     edited: "editat",
 
     // pages.js
-    your_profile: "El Teu Perfil",
+    user_settings: "Ajustes d'Usuari",
     loading: "Carregant...",
     change_password: "Canviar Contrasenya",
     current_password: "Contrasenya Actual",
@@ -305,6 +317,9 @@ const translations = {
     role_updated: "Rol actualitzat",
     user_deleted: "Usuari eliminat",
     admin_required: "Es requereix accés d'administrador",
+    edit_username: "✏️ Editar Usuari",
+    new_username_placeholder: "Nou usuari",
+    username_updated: "Usuari actualitzat amb èxit",
 
     // auth.js
     logout: "Tancar sessió",

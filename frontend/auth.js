@@ -32,42 +32,33 @@ export function saveAuth() {
 export function renderAuthArea() {
   if (state.auth.token) {
     const initial = state.auth.username.charAt(0).toUpperCase();
-    const adminLinkDesktop = state.auth.is_admin
-      ? `<a href="#admin" class="btn-ghost" style="font-size:0.8rem">⚙️ ${t("admin_uppercase")}</a>`
-      : '';
-    const adminLinkMobile = state.auth.is_admin
+    const adminLink = state.auth.is_admin
       ? `<a href="#admin" class="user-dropdown-item">⚙️ ${t("admin_uppercase")}</a>`
       : '';
 
     dom.authArea.innerHTML = `
-      <!-- Desktop layout -->
-      <div class="user-info">
-        <a href="#profile" class="username">${escHtml(state.auth.username)}</a>
-        ${adminLinkDesktop}
-        <button class="btn-logout" id="btn-logout">${t("logout")}</button>
-      </div>
-
-      <!-- Mobile avatar menu -->
-      <div class="user-menu-mobile" id="user-menu-mobile">
-        <button class="user-avatar-btn" id="user-avatar-btn" aria-label="${t("your_profile")}" aria-expanded="false">
-          ${initial}
+      <div class="user-menu-wrap" id="user-menu-wrap">
+        <button class="user-dropdown-btn" id="user-dropdown-btn" aria-expanded="false">
+          <span class="username">${escHtml(state.auth.username)}</span>
+          <span class="dropdown-arrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </span>
         </button>
-        <div class="user-dropdown" id="user-dropdown" aria-hidden="true">
+
+        <div class="user-dropdown" id="user-dropdown-shared" aria-hidden="true">
           <span class="user-dropdown-name">${escHtml(state.auth.username)}</span>
-          <a href="#profile" class="user-dropdown-item">👤 ${t("your_profile")}</a>
-          ${adminLinkMobile}
-          <button class="user-dropdown-item user-dropdown-logout" id="btn-logout-mobile">${t("logout")}</button>
+          <a href="#profile" class="user-dropdown-item">👤 ${t("user_settings")}</a>
+          ${adminLink}
+          <button class="user-dropdown-item user-dropdown-logout" id="btn-logout-shared">${t("logout")}</button>
         </div>
       </div>
     `;
 
     // Shared logout logic
     const doLogout = () => {
-      // Reset state.auth completely
       state.auth = { token: null, username: null, userId: null, is_admin: false };
       saveAuth();
       renderAuthArea();
-      // Immediately re-fetch the feed so cards reload with user_vote: null
       setTimeout(async () => {
         const { loadFeedPage } = await import("./feed.js");
         state.currentPage = 1;
@@ -77,35 +68,39 @@ export function renderAuthArea() {
       toast(t("logged_out"));
     };
 
-    document.getElementById("btn-logout").addEventListener("click", doLogout);
-    document.getElementById("btn-logout-mobile").addEventListener("click", doLogout);
+    const logoutBtn = document.getElementById("btn-logout-shared");
+    logoutBtn.addEventListener("click", doLogout);
 
-    // Mobile menu toggle
-    const avatarBtn = document.getElementById("user-avatar-btn");
-    const dropdown = document.getElementById("user-dropdown");
-    const menuWrap = document.getElementById("user-menu-mobile");
+    // Dropdown toggle logic
+    const dropdownBtn = document.getElementById("user-dropdown-btn");
+    const dropdown = document.getElementById("user-dropdown-shared");
+    const menuWrap = document.getElementById("user-menu-wrap");
 
-    avatarBtn.addEventListener("click", (e) => {
+    const toggleDropdown = (e) => {
       e.stopPropagation();
       const isOpen = dropdown.classList.toggle("open");
-      avatarBtn.setAttribute("aria-expanded", String(isOpen));
+      dropdownBtn.setAttribute("aria-expanded", String(isOpen));
       dropdown.setAttribute("aria-hidden", String(!isOpen));
-    });
+    };
+
+    dropdownBtn.addEventListener("click", toggleDropdown);
 
     // Close dropdown when any link inside it is tapped
     dropdown.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", () => {
         dropdown.classList.remove("open");
-        avatarBtn.setAttribute("aria-expanded", "false");
+        dropdownBtn.setAttribute("aria-expanded", "false");
       });
     });
 
     // Close on outside tap
     const closeOnOutside = (e) => {
       if (!menuWrap.contains(e.target)) {
-        dropdown.classList.remove("open");
-        avatarBtn.setAttribute("aria-expanded", "false");
-        document.removeEventListener("click", closeOnOutside);
+        if (dropdown.classList.contains("open")) {
+          dropdown.classList.remove("open");
+          dropdownBtn.setAttribute("aria-expanded", "false");
+          dropdown.setAttribute("aria-hidden", "true");
+        }
       }
     };
     document.addEventListener("click", closeOnOutside);
@@ -114,14 +109,14 @@ export function renderAuthArea() {
     dom.authArea.innerHTML = `
       <!-- Desktop layout -->
       <div class="auth-links">
-        <a href="#login" class="btn-ghost">${t("log_in")}</a>
-        <a href="#register" class="btn-accent">${t("sign_up")}</a>
+        <a href="#register" class="btn-ghost">${t("sign_up")}</a>
+        <a href="#login" class="btn-accent">${t("log_in")}</a>
       </div>
 
       <!-- Mobile guest menu -->
       <div class="user-menu-mobile" id="guest-menu-mobile">
         <button class="user-access-btn" id="guest-access-btn" aria-expanded="false">
-          ${t("access")}
+          ${t("log_in")}
         </button>
         <div class="user-dropdown" id="guest-dropdown" aria-hidden="true">
           <span class="user-dropdown-name">${t("welcome_guest")}</span>
@@ -144,7 +139,6 @@ export function renderAuthArea() {
         guestDropdown.setAttribute("aria-hidden", String(!isOpen));
       });
 
-      // Close dropdown when any link inside it is tapped
       guestDropdown.querySelectorAll("a").forEach(link => {
         link.addEventListener("click", () => {
           guestDropdown.classList.remove("open");
@@ -152,7 +146,6 @@ export function renderAuthArea() {
         });
       });
 
-      // Close on outside tap
       const closeGuestOnOutside = (e) => {
         if (!guestMenuWrap.contains(e.target)) {
           guestDropdown.classList.remove("open");

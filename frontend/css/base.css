@@ -29,9 +29,13 @@
   --negative-hover: #e4808a;
   --negative-glow: rgba(221, 105, 116, 0.15);
 
-  --score-positive: #1c1b19;
-  --score-negative: #dd6974;
-  --score-zero: #5a5652;
+  --positive: #48bb78;
+  --positive-hover: #38a169;
+  --positive-glow: rgba(72, 187, 120, 0.15);
+
+  --score-positive: var(--text-primary);
+  --score-negative: var(--negative);
+  --score-zero: var(--text-secondary);
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
@@ -68,7 +72,9 @@
   --accent-glow: rgba(204, 201, 196, 0.15);
   --accent-subtle: rgba(204, 201, 196, 0.08);
 
-  --score-positive: #ccc9c4;
+  --score-positive: var(--text-primary);
+  --positive: #48bb78;
+  --positive-glow: rgba(72, 187, 120, 0.15);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
