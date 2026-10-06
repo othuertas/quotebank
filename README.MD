@@ -93,12 +93,44 @@ A full-stack web application designed to host a community collection of quotes a
 ---
 
 ## 🐳 Docker Deployment
-The entire service can be self-hosted on Docker.
+The service can be self-hosted on a Raspberry Pi with Docker Compose.
 
-To run the entire stack using Docker:
+1. Create a local `.env` file in the repository root (do not commit it):
+
+   ```dotenv
+   JWT_SECRET=replace-with-a-long-random-secret
+   ```
+
+2. Validate the Compose configuration:
+
+   ```bash
+   docker compose config
+   ```
+
+3. Build and deploy from the checked-out repository:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Verify status and logs:
+
+   ```bash
+   docker compose ps
+   docker compose logs --tail=100 quotebank
+   ```
+
+Persistent data is stored in the existing bind mounts under `/DATA/AppData/quotebank`:
+
+- `/DATA/AppData/quotebank/quotebank.db` → `/app/quotebank.db`
+- `/DATA/AppData/quotebank/backend/uploads` → `/app/backend/uploads`
+
+Back up both the SQLite database and uploads before deployments.
+
+For normal deployments, do **not** run:
 
 ```bash
-docker-compose up --build -d
+docker compose down -v
 ```
 ---
 
