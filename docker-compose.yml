@@ -1,11 +1,12 @@
 services:
   quotebank:
-    image: quotebank:latest
+    build:
+      context: .
     ports:
       - "8013:8000"
     volumes:
       - /DATA/AppData/quotebank/backend/uploads:/app/backend/uploads
       - /DATA/AppData/quotebank/quotebank.db:/app/quotebank.db
-    environment:
-      - JWT_SECRET=2a2cdf478272e30e929f384b9aba9141d445781a26459539623d6ca0d8d0a24e
+    env_file:
+      - .env
     restart: unless-stopped
