@@ -2,10 +2,6 @@ import { getRoute } from "./router.js";
 import { t } from "./i18n.js";
 
 let isOpen = false;
-let longPressTimer = null;
-let isLongPress = false;
-let touchStartX = 0;
-let touchStartY = 0;
 
 export function isSwitcherOpen() {
   return isOpen;
@@ -80,63 +76,8 @@ export function setupFeedSwitcher() {
 
   if (!logoBtn || !wrap) return;
 
-  // ── Touch events for mobile long-press ────────────────────────────────────
-  logoBtn.addEventListener("touchstart", (e) => {
-    if (e.touches.length !== 1) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    isLongPress = false;
-    logoBtn.classList.add("is-pressing");
-
-    clearTimeout(longPressTimer);
-    longPressTimer = setTimeout(() => {
-      isLongPress = true;
-      logoBtn.classList.remove("is-pressing");
-      if (navigator.vibrate) {
-        try { navigator.vibrate(35); } catch (_) {}
-      }
-      openSwitcher();
-    }, 380);
-  }, { passive: true });
-
-  logoBtn.addEventListener("touchmove", (e) => {
-    if (!longPressTimer) return;
-    const touch = e.touches[0];
-    const dx = Math.abs(touch.clientX - touchStartX);
-    const dy = Math.abs(touch.clientY - touchStartY);
-    if (dx > 10 || dy > 10) {
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
-      logoBtn.classList.remove("is-pressing");
-    }
-  }, { passive: true });
-
-  logoBtn.addEventListener("touchend", (e) => {
-    clearTimeout(longPressTimer);
-    longPressTimer = null;
-    logoBtn.classList.remove("is-pressing");
-
-    if (isLongPress) {
-      if (e.cancelable) e.preventDefault();
-      setTimeout(() => { isLongPress = false; }, 150);
-    } else if (isOpen) {
-      // If tapped while already open, dismiss
-      if (e.cancelable) e.preventDefault();
-      closeSwitcher();
-    }
-  });
-
-  logoBtn.addEventListener("touchcancel", () => {
-    clearTimeout(longPressTimer);
-    longPressTimer = null;
-    logoBtn.classList.remove("is-pressing");
-    isLongPress = false;
-  });
-
-  // ── Desktop click ─────────────────────────────────────────────────────────
   logoBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    if (isLongPress) return;
     toggleSwitcher();
   });
 
