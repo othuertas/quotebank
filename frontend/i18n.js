@@ -3,8 +3,8 @@ import { state } from "./state.js";
 const translations = {
   en: {
     // index.html
-    switch_to_meme: "switch to MemeBank!",
-    switch_to_quote: "switch to QuoteBank!",
+    switch_to_meme: "Switch to MemeBank",
+    switch_to_quote: "Switch to QuoteBank",
 
     // feed.js
     add_quote: "+ Add Quote",
@@ -119,8 +119,8 @@ const translations = {
   },
   es: {
     // index.html
-    switch_to_meme: "¡cambiar a MemeBank!",
-    switch_to_quote: "¡cambiar a QuoteBank!",
+    switch_to_meme: "Cambiar a MemeBank",
+    switch_to_quote: "Cambiar a QuoteBank",
 
     // feed.js
     add_quote: "+ Añadir Cita",
@@ -235,8 +235,8 @@ const translations = {
   },
   ca: {
     // index.html
-    switch_to_meme: "canviar a MemeBank!",
-    switch_to_quote: "canviar a QuoteBank!",
+    switch_to_meme: "Canviar a MemeBank",
+    switch_to_quote: "Canviar a QuoteBank",
 
     // feed.js
     add_quote: "+ Afegir Cita",
@@ -245,8 +245,8 @@ const translations = {
     sort_top: "Top",
     sort_old: "Antics",
     sort_random: "Aleatori",
-    search_placeholder: "Cercar a Quotebank",
-    search_placeholder_meme: "Cercar a Memebank",
+    search_placeholder: "Cerca a Quotebank",
+    search_placeholder_meme: "Cerca a Memebank",
     load_more: "Carregar més",
     no_quotes: "Encara no hi ha cites",
     no_memes: "Encara no hi ha mems",
@@ -287,7 +287,7 @@ const translations = {
     edited: "editat",
 
     // pages.js
-    user_settings: "Ajustes d'Usuari",
+    user_settings: "Opcions d'Usuari",
     loading: "Carregant...",
     change_password: "Canviar Contrasenya",
     current_password: "Contrasenya Actual",
@@ -297,23 +297,23 @@ const translations = {
     danger_zone: "Zona de Perill",
     delete_warning: "Elimina permanentment el teu compte i totes les dades associades. Això no es pot desfer.",
     delete_account: "Eliminar El Meu Compte",
-    delete_confirm: "Estàs segur? Fes clic de nou per confirmar.",
+    delete_confirm: "N'estàs segur? Fes clic de nou per confirmar.",
     account_deleted: "Compte eliminat",
     admin_panel: "⚙️ Tauler d'Administració",
     loading_users: "Carregant usuaris...",
     no_users: "No s'han trobat usuaris.",
-    joined: "Unit",
+    joined: "Membre des de",
     quotes_count: "cites",
     memes_count: "mems",
     admin_lowercase: "admin",
     admin_uppercase: "ADMIN",
     reset_pw: "🔑 Rest. Contrasenya",
-    remove_admin: "👤 Treure Admin",
+    remove_admin: "👤 Revocar Admin",
     make_admin: "🛡️ Fer Admin",
     delete_btn: "🗑️ Eliminar",
     new_pw_placeholder: "Nova contrasenya",
     save: "Desar",
-    pw_reset_success: "Contrasenya restablerta amb èxit",
+    pw_reset_success: "Contrasenya reestablerta amb èxit",
     role_updated: "Rol actualitzat",
     user_deleted: "Usuari eliminat",
     admin_required: "Es requereix accés d'administrador",

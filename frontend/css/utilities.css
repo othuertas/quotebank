@@ -29,20 +29,41 @@
   /* Header */
   .header-inner {
     padding: 0 12px;
-    height: 54px;
+    height: 62px;
     gap: 8px;
   }
 
-  .logo { font-size: 1.15rem; }
+  .logo {
+    font-size: 1.3rem;
+    padding: 4px 6px;
+    gap: 5px;
+  }
+  .logo-caret { width: 11px; height: 11px; }
 
-  /* Show only the ⇄ icon on mobile, hide the label text */
-  .switch-text { display: none; }
-  .switch-feed { gap: 0; font-size: 1.15rem; }
+  /* Feed switcher dropdown on mobile */
+  .feed-switcher-dropdown {
+    min-width: 175px;
+    padding: 8px 10px 10px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+
+  .feed-switcher-option {
+    padding: 8px 14px;
+  }
+
+  .switcher-logo-text {
+    font-size: 1.25rem;
+  }
+
+  .switcher-hint {
+    font-size: 0.68rem;
+  }
 
   /* Lang switcher */
   .lang-switcher-wrap { gap: 2px; padding: 4px 4px; }
-  .lang-icon { font-size: 0.95rem; }
-  .lang-arrow { font-size: 0.6rem; }
+  .lang-icon svg { width: 15px; height: 15px; }
+  .lang-arrow svg { width: 9px; height: 9px; }
 
   /* Header right: tighter */
   .header-right { gap: 6px; }

@@ -33,7 +33,7 @@ export function renderAuthArea() {
   if (state.auth.token) {
     const initial = state.auth.username.charAt(0).toUpperCase();
     const adminLink = state.auth.is_admin
-      ? `<a href="#admin" class="user-dropdown-item">⚙️ ${t("admin_uppercase")}</a>`
+      ? `<a href="#admin" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> <span>${t("admin_uppercase")}</span></a>`
       : '';
 
     dom.authArea.innerHTML = `
@@ -47,9 +47,9 @@ export function renderAuthArea() {
 
         <div class="user-dropdown" id="user-dropdown-shared" aria-hidden="true">
           <span class="user-dropdown-name">${escHtml(state.auth.username)}</span>
-          <a href="#profile" class="user-dropdown-item">👤 ${t("user_settings")}</a>
+          <a href="#profile" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>${t("user_settings")}</span></a>
           ${adminLink}
-          <button class="user-dropdown-item user-dropdown-logout" id="btn-logout-shared">${t("logout")}</button>
+          <button class="user-dropdown-item user-dropdown-logout" id="btn-logout-shared"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> <span>${t("logout")}</span></button>
         </div>
       </div>
     `;
@@ -120,8 +120,8 @@ export function renderAuthArea() {
         </button>
         <div class="user-dropdown" id="guest-dropdown" aria-hidden="true">
           <span class="user-dropdown-name">${t("welcome_guest")}</span>
-          <a href="#login" class="user-dropdown-item">🔑 ${t("log_in")}</a>
-          <a href="#register" class="user-dropdown-item">✨ ${t("sign_up")}</a>
+          <a href="#login" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg> <span>${t("log_in")}</span></a>
+          <a href="#register" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg> <span>${t("sign_up")}</span></a>
         </div>
       </div>
     `;

@@ -3,6 +3,7 @@ import { loadAuth, renderAuthArea } from "./auth.js";
 import { setupRouter, route } from "./router.js";
 import { setupModalListeners } from "./modals.js";
 import { initI18n, updateStaticTranslations } from "./i18n.js";
+import { setupFeedSwitcher } from "./switcher.js";
 import { state } from "./state.js";
 
 // ── Scroll to Top ─────────────────────────────────────────────────────────
@@ -34,6 +35,7 @@ updateStaticTranslations();
 // ── Init ──────────────────────────────────────────────────────────────────
 initTheme();
 setupThemeListeners();
+setupFeedSwitcher();
 loadAuth();
 renderAuthArea();
 setupRouter();

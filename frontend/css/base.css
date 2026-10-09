@@ -96,6 +96,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, button, a, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none;
 }
 
 html {
