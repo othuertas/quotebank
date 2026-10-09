@@ -3,9 +3,6 @@ import { state } from "./state.js";
 const translations = {
   en: {
     // index.html
-    switch_to_meme: "Switch to MemeBank",
-    switch_to_quote: "Switch to QuoteBank",
-
     // feed.js
     add_quote: "+ Add Quote",
     add_meme: "+ Add Meme",
@@ -119,9 +116,6 @@ const translations = {
   },
   es: {
     // index.html
-    switch_to_meme: "Cambiar a MemeBank",
-    switch_to_quote: "Cambiar a QuoteBank",
-
     // feed.js
     add_quote: "+ Añadir Cita",
     add_meme: "+ Añadir Meme",
@@ -235,9 +229,6 @@ const translations = {
   },
   ca: {
     // index.html
-    switch_to_meme: "Canviar a MemeBank",
-    switch_to_quote: "Canviar a QuoteBank",
-
     // feed.js
     add_quote: "+ Afegir Cita",
     add_meme: "+ Afegir Mem",
