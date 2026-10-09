@@ -39,10 +39,10 @@
   .switch-text { display: none; }
   .switch-feed { gap: 0; font-size: 1.15rem; }
 
-  /* Shrink lang switcher */
-  .lang-switcher-wrap { gap: 2px; }
-  .lang-icon { font-size: 0.9rem; }
-  .lang-switcher { font-size: 0.8rem; }
+  /* Lang switcher */
+  .lang-switcher-wrap { gap: 2px; padding: 4px 4px; }
+  .lang-icon { font-size: 0.95rem; }
+  .lang-arrow { font-size: 0.6rem; }
 
   /* Header right: tighter */
   .header-right { gap: 6px; }
@@ -58,8 +58,8 @@
   /* Show the mobile avatar menu */
   .user-menu-mobile { display: flex; }
 
-  /* Main content */
-  .main { padding: 16px 12px 100px; }
+  /* Main content: extra bottom padding so content scrolls completely clear of floating action button */
+  .main { padding: 16px 12px calc(110px + env(safe-area-inset-bottom, 0px)); }
 
   /* Cards */
   .card { padding: 16px; margin-bottom: 12px; }
@@ -74,19 +74,32 @@
   .vote-btn { width: 40px; height: 40px; font-size: 1.05rem; }
 
   /* Feed controls: stack vertically, full-width */
-  .feed-controls-container { gap: 10px; margin-bottom: 16px; }
+  .feed-controls-container {
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: stretch;
+  }
   .feed-controls-top {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    width: 100%;
+    gap: 10px;
   }
 
   /* Search: full width on mobile */
-  .search-input { width: 100%; }
+  .search-input {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
   .search-input:focus { width: 100%; }
 
-  /* Sort buttons: icon-only by default; only the active one shows its label */
-  .sort-buttons { width: 100%; }
+  /* Sort buttons: centered beneath search */
+  .sort-buttons {
+    width: fit-content;
+    align-self: center;
+    margin: 0 auto;
+  }
   .sort-btn { justify-content: center; }
   /* Kill hover-expand on touch — no hover on mobile */
   .sort-btn:hover .sort-label {
@@ -101,9 +114,41 @@
     margin-left: 5px;
   }
 
-  /* Post button */
-  .btn-post { padding: 13px 20px; font-size: 0.95rem; }
-  .btn-post.full-width { max-width: 100%; }
+  /* Post button: floating at the bottom on mobile, always accessible */
+  .btn-post,
+  .btn-post.full-width {
+    position: fixed;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: 440px;
+    margin: 0 auto;
+    z-index: 90;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .btn-post:active {
+    transform: scale(0.98);
+  }
+
+  /* Go to top button on mobile: position above floating add quote button */
+  .go-to-top {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    z-index: 95;
+  }
 
   /* Auth pages */
   .auth-card { padding: 24px 16px; }
@@ -157,7 +202,7 @@
 @media (max-width: 640px) {
   .toast-container {
     top: auto;
-    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
     right: 12px;
     left: 12px;
   }

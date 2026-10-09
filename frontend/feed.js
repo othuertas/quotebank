@@ -11,13 +11,13 @@ export function renderFeed(type) {
   dom.app.innerHTML = `
     <div class="feed-controls-container">
       <div class="feed-controls-top">
+        ${isQuotes ? `<input type="text" id="search-input" class="search-input" placeholder="${t("search_placeholder")}">` : ''}
         <div class="sort-buttons" id="sort-buttons">
           <button class="sort-btn active" data-sort="new"><span class="sort-icon">🆕</span><span class="sort-label">${t("sort_new")}</span></button>
           <button class="sort-btn" data-sort="top"><span class="sort-icon">🔥</span><span class="sort-label">${t("sort_top")}</span></button>
           <button class="sort-btn" data-sort="old"><span class="sort-icon">📅</span><span class="sort-label">${t("sort_old")}</span></button>
           <button class="sort-btn" data-sort="random"><span class="sort-icon">🎲</span><span class="sort-label">${t("sort_random")}</span></button>
         </div>
-        ${isQuotes ? `<input type="text" id="search-input" class="search-input" placeholder="${t("search_placeholder")}">` : ''}
       </div>
       ${state.auth.token ? `<button class="btn-post full-width" id="btn-open-post">${postLabel}</button>` : ""}
     </div>
