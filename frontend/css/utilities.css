@@ -167,7 +167,7 @@
 
   /* Go to top button on mobile: position above floating add quote button */
   .go-to-top {
-    bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 68px);
+    bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 84px);
     right: 16px;
     width: 44px;
     height: 44px;
