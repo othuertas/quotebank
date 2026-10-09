@@ -131,8 +131,13 @@ export function setupFeedSwitcher() {
 
   // ── Click option to switch feed ───────────────────────────────────────────
   if (otherLink) {
-    otherLink.addEventListener("click", () => {
+    otherLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetHash = getRoute() === "memes" ? "#quotes" : "#memes";
       closeSwitcher();
+      if (location.hash !== targetHash) {
+        location.hash = targetHash;
+      }
     });
   }
 

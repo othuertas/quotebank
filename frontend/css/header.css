@@ -153,6 +153,15 @@
   font-weight: 500;
 }
 
+.logo-text,
+.switcher-logo-text {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
 .logo-caret {
   position: absolute;
   right: 12px;
