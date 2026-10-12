@@ -3,6 +3,8 @@ export const state = {
   currentPage: 1,
   currentSort: "new",
   currentSearch: "",
+  currentFeed: "quotes",
+  profileReturnFeed: "quotes",
   isLoading: false,
   searchTimeout: null,
   lang: "en",

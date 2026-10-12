@@ -53,6 +53,7 @@ const translations = {
 
     // pages.js
     user_settings: "User Settings",
+    close_settings: "Close",
     loading: "Loading...",
     change_password: "Change Password",
     current_password: "Current Password",
@@ -166,6 +167,7 @@ const translations = {
 
     // pages.js
     user_settings: "Ajustes de Usuario",
+    close_settings: "Cerrar",
     loading: "Cargando...",
     change_password: "Cambiar Contraseña",
     current_password: "Contraseña Actual",
@@ -279,6 +281,7 @@ const translations = {
 
     // pages.js
     user_settings: "Opcions d'Usuari",
+    close_settings: "Tancar",
     loading: "Carregant...",
     change_password: "Canviar Contrasenya",
     current_password: "Contrasenya Actual",

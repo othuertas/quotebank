@@ -1,4 +1,5 @@
 import { getRoute } from "./router.js";
+import { state } from "./state.js";
 
 let isOpen = false;
 let pressTimer = null;
@@ -45,7 +46,10 @@ export function toggleSwitcher() {
 
 export function updateFeedSwitcher(route) {
   const r = route || getRoute();
-  const isMeme = r === "memes";
+  if (r === "quotes" || r === "memes") {
+    state.currentFeed = r;
+  }
+  const isMeme = state.currentFeed === "memes";
 
   const logoText = document.getElementById("logo-text");
   const mainLogo = document.getElementById("main-logo");

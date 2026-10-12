@@ -11,7 +11,10 @@ export async function renderProfile() {
   dom.app.innerHTML = `
     <div class="profile-page">
       <div class="profile-header">
-        <h2>${t("user_settings")}</h2>
+        <div class="profile-header-title">
+          <h2>${t("user_settings")}</h2>
+          <button class="btn-ghost profile-close-btn" id="btn-close-profile" type="button" aria-label="${t("close_settings")}" title="${t("close_settings")}">✕</button>
+        </div>
         <p class="subtitle" id="profile-info">${t("loading")}</p>
       </div>
       <div class="profile-grid">
@@ -38,6 +41,10 @@ export async function renderProfile() {
       </div>
     </div>
   `;
+
+  document.getElementById("btn-close-profile").addEventListener("click", () => {
+    location.hash = `#${state.profileReturnFeed}`;
+  });
 
   try {
     const p = await api("GET", "/auth/me");

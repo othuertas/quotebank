@@ -47,7 +47,7 @@ export function renderAuthArea() {
 
         <div class="user-dropdown" id="user-dropdown-shared" aria-hidden="true">
           <span class="user-dropdown-name">${escHtml(state.auth.username)}</span>
-          <a href="#profile" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>${t("user_settings")}</span></a>
+          <a href="#profile" id="user-settings-link" class="user-dropdown-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>${t("user_settings")}</span></a>
           ${adminLink}
           <button class="user-dropdown-item user-dropdown-logout" id="btn-logout-shared"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> <span>${t("logout")}</span></button>
         </div>
@@ -70,6 +70,10 @@ export function renderAuthArea() {
 
     const logoutBtn = document.getElementById("btn-logout-shared");
     logoutBtn.addEventListener("click", doLogout);
+
+    document.getElementById("user-settings-link").addEventListener("click", () => {
+      state.profileReturnFeed = state.currentFeed;
+    });
 
     // Dropdown toggle logic
     const dropdownBtn = document.getElementById("user-dropdown-btn");
